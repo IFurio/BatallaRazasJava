@@ -1,7 +1,10 @@
+package classes;
+
 import java.awt.image.BufferedImage;
 public class Warrior {
     private int id;
     private String name;
+    private String race;
     private int life;
     private int force;
     private int defense;
@@ -10,9 +13,10 @@ public class Warrior {
     private BufferedImage image;
     private int points;
 
-    public Warrior(int id, String name, int life, int force, int defense, int agility, int speed, BufferedImage image, int points) {
+    public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, BufferedImage image, int points) {
         this.id = id;
         this.name = name;
+        this.race = race;
         this.life = life;
         this.force = force;
         this.defense = defense;
@@ -33,6 +37,12 @@ public class Warrior {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public String getRace() {
+        return race;
+    }
+    public void setRace(String race) {
+        this.race = race;
     }
     public int getLife() {
         return life;
