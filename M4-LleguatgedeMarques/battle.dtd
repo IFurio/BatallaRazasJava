@@ -1,0 +1,10 @@
+<!ELEMENT battle (battle_id, player_id, warrior_id, warrior_weapon_id, opponent_id, opponent_weapon_id, injuries_caused, injuries_suffered, battle_points)>
+<!ELEMENT battle_id (#PCDATA)>
+<!ELEMENT player_id (#PCDATA)>
+<!ELEMENT warrior_id (#PCDATA)>
+<!ELEMENT warrior_weapon_id (#PCDATA)>
+<!ELEMENT opponent_id (#PCDATA)>
+<!ELEMENT opponent_weapon_id (#PCDATA)>
+<!ELEMENT injuries_caused (#PCDATA)>
+<!ELEMENT injuries_suffered (#PCDATA)>
+<!ELEMENT battle_points (#PCDATA)>
