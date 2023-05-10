@@ -38,7 +38,7 @@ CREATE TABLE `weapons` (
 
 LOCK TABLES `weapons` WRITE;
 /*!40000 ALTER TABLE `weapons` DISABLE KEYS */;
-INSERT INTO `weapons` VALUES (1,'Bow','',1,5),(2,'Sword','',1,1);
+INSERT INTO `weapons` VALUES (1,'Bow','',1,5),(2,'Sword','',1,1),(3,'Daggers','',0,3),(4,'Katana','',2,3),(5,'Poniard','',0,4),(6,'Two handed axe','',5,0),(7,'Scimitar','',1,2),(8,'Double swords','',2,2);
 /*!40000 ALTER TABLE `weapons` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-08 18:40:23
+-- Dump completed on 2023-05-10 17:27:58
