@@ -127,6 +127,7 @@ class gameFrame1 extends JFrame {
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
+        mainPanel.add(scrollPane, BorderLayout.SOUTH);
 
         leftPanel.setOpaque(false);
         rightPanel.setOpaque(false);
@@ -158,7 +159,6 @@ class gameFrame1 extends JFrame {
         centerPanel.add(defenseBar1, BorderLayout.NORTH);
         centerPanel.add(defenseBar2, BorderLayout.NORTH);
         centerPanel.add(imgLabel2, BorderLayout.NORTH);
-        centerPanel.add(scrollPane, BorderLayout.SOUTH);
 
         mainPanel.setComponentZOrder(imgLabel, mainPanel.getComponentCount() - 1);
 
