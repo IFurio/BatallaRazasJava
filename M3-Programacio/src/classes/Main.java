@@ -2,11 +2,7 @@ package classes;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.File;
-import javax.imageio.ImageIO;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,15 +12,16 @@ public class Main {
 }
 class gameFrame1 extends JFrame {
     private JPanel mainPanel, leftPanel, rightPanel, centerPanel;
-    private JLabel imgLabel, imgLabel2, name1, name2;
+    private JLabel imgLabel, imgLabel2, lifeBar1, lifeBar2, name1, name2;
     private JButton button1, button2, button3, button4, button5;
     private BufferedImage image, image2;
+    private JScrollPane scrollPane;
     private JTextArea console;
     gameFrame1() {
         setSize(960, 680);
         setTitle("RacesBattle");
         setLocation(100, 600);
-        setResizable(false); // evitas que se pueda cambiar el tamanyo de esta ventana o no
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         mainPanel = new JPanel();
@@ -38,7 +35,23 @@ class gameFrame1 extends JFrame {
         button4 = new JButton("Fight");
         button5 = new JButton("Clear Console");
 
-        console = new JTextArea();
+        console = new JTextArea(5, 70);
+        console.setEditable(false);
+        console.setLineWrap(false);
+
+        scrollPane = new JScrollPane(console);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        lifeBar1 = new JLabel("100%");
+        lifeBar1.setBackground(Color.GREEN);
+        lifeBar1.setBounds(50, 30, 250, 10);
+        lifeBar1.setOpaque(true);
+
+        lifeBar2 = new JLabel("100%");
+        lifeBar2.setBackground(Color.GREEN);
+        lifeBar2.setBounds(390, 30, 250, 10);
+        lifeBar2.setOpaque(true);
 
         button1.setBackground(Color.PINK);
         button2.setBackground(Color.PINK);
@@ -49,54 +62,49 @@ class gameFrame1 extends JFrame {
         mainPanel.setLayout(new BorderLayout());
 
         if (System.getProperty("os.name").equals("Linux")) {
-            imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/overlayArcade2(1).png"));
-            imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/background.gif"));
+            imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
+            imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
+            setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
         }else {
-            imgLabel = new JLabel(new ImageIcon("M3-Programacio\\Images\\overlayArcade2(1).png"));
-            imgLabel2 = new JLabel(new ImageIcon("M3-Programacio\\Images\\background.gif"));
+            imgLabel2 = new JLabel(new ImageIcon("M3-Programacio\\Images\\VSlogo.png"));
+            imgLabel = new JLabel(new ImageIcon("M3-Programacio\\Images\\animation.gif"));
+            setIconImage(new ImageIcon("M3-Programacio\\Images\\fightIcon.jpg").getImage());
         }
+        //imgLabel2.setBounds(0, 0, getWidth(), getHeight());
+        //imgLabel2.setVerticalTextPosition(10);
         imgLabel.setBounds(0, -70, getWidth(), getHeight());
-        imgLabel2.setHorizontalAlignment(SwingConstants.LEFT);
-        imgLabel2.setVerticalAlignment(SwingConstants.TOP);
 
-        imgLabel2.setOpaque(false);
-
+        mainPanel.add(imgLabel);
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
-        mainPanel.add(imgLabel);
-        mainPanel.add(imgLabel2);
 
         leftPanel.setOpaque(false);
         rightPanel.setOpaque(false);
-        // centerPanel.setOpaque(false);
+        centerPanel.setOpaque(false);
+        mainPanel.setOpaque(false);
 
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         centerPanel.setLayout(new BorderLayout());
 
         leftPanel.add(button1);
-        leftPanel.add(Box.createRigidArea(new Dimension(0, 15))); // anyade un espacio en blanco
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 15))); // add a blank box
         leftPanel.add(button2);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         leftPanel.add(button3);
+
         rightPanel.add(button4);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         rightPanel.add(button5);
 
-        centerPanel.add(console, BorderLayout.SOUTH);
+        centerPanel.add(lifeBar1, BorderLayout.NORTH);
+        centerPanel.add(lifeBar2, BorderLayout.NORTH);
+        centerPanel.add(imgLabel2, BorderLayout.NORTH);
+        centerPanel.add(scrollPane, BorderLayout.SOUTH);
+
+        mainPanel.setComponentZOrder(imgLabel, mainPanel.getComponentCount() - 1);
 
         add(mainPanel);
-    }
-    public void paint(Graphics g) {
-        super.paint(g); // simepre hay que poner esto
-        System.out.println("Entramos en el metodo paint");
-        Graphics2D g2d = (Graphics2D)g; // casteamos
-        System.out.println(g2d.getBackground());
-        System.out.println(g2d.getColor());
-        g2d.setStroke(new BasicStroke(10));
-        g2d.setColor(Color.GREEN);
-        g2d.drawLine(300, 50, 50, 500);
-
     }
 }
