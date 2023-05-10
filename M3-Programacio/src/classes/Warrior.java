@@ -10,10 +10,10 @@ public class Warrior {
     private int defense;
     private int agility;
     private int speed;
-    private BufferedImage image;
+    private String imgUrl;
     private int points;
 
-    public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, BufferedImage image, int points) {
+    public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, String imgUrl, int points) {
         this.id = id;
         this.name = name;
         this.race = race;
@@ -22,7 +22,7 @@ public class Warrior {
         this.defense = defense;
         this.agility = agility;
         this.speed = speed;
-        this.image = image;
+        this.imgUrl = imgUrl;
         this.points = points;
     }
 
@@ -74,11 +74,11 @@ public class Warrior {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
-    public BufferedImage getImage() {
-        return image;
+    public String getImgUrl() {
+        return imgUrl;
     }
-    public void setImage(BufferedImage image) {
-        this.image = image;
+    public void setimageUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
     public int getPoints() {
         return points;
