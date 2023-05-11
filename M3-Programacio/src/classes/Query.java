@@ -4,10 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Query {
-    public static void main(String[] args) {
+    public void dataBaseLogin() { // it is used to connect to a database
         String url = "jdbc:mysql://localhost/batalla_races?serverTimezone=UTC";
-        String user = "root";
-        String pass = "root";
+        String user = "isaac"; // make sure these are your current credentials
+        String pass = "1234";
         Query query = new Query();
 
         query.warrior_getdata(url,user,pass);
@@ -41,10 +41,8 @@ public class Query {
                 WarriorContainer main_warrior_list = new WarriorContainer(warrior_list);
             }
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             System.out.println("El driver no se ha caragdo correctamente");
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             System.out.println("Conexion no creada correctamente");
         }
 
@@ -74,11 +72,22 @@ public class Query {
             }
 
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             System.out.println("El driver no se ha caragdo correctamente");
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             System.out.println("Conexion no creada correctamente");
+        }
+    }
+    public ResultSet makeSelect(String url, String user, String pass, String query) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url, user, pass);
+            Statement stm = con.createStatement();
+            return stm.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

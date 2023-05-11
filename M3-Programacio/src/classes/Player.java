@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Player extends JFrame implements ActionListener {
     private String name;
@@ -54,7 +56,16 @@ public class Player extends JFrame implements ActionListener {
         }
         else {
             setName(fill.getText());
-            // meter id con select de consulta
+            Query users = new Query();
+            ResultSet rs;
+            rs = users.makeSelect("jdbc:mysql://localhost/batalla_races?serverTimezone=UTC", "isaac", "1234", "select max(player_id) from players");
+            try {
+                rs.next();
+                setId(rs.getInt(1) + 1);
+                System.out.println(getId());
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             dispose();
             new GameFrame1();
         }
