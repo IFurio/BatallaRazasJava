@@ -7,10 +7,10 @@ public class Weapon {
     private int speed;
     private int force;
     private int points;
-    private BufferedImage image;
+    private String image;
 
 
-    public Weapon(int id, String name, int speed, int force, int points, BufferedImage image) {
+    public Weapon(int id, String name, int speed, int force, int points, String image) {
         this.id = id;
         this.name = name;
         this.speed = speed;
@@ -49,10 +49,10 @@ public class Weapon {
     public void setPoints(int points) {
         this.points = points;
     }
-    public BufferedImage getImage() {
+    public String getImage() {
         return image;
     }
-    public void setImage(BufferedImage image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }
