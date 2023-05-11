@@ -6,11 +6,10 @@ import java.awt.event.ActionListener;
 
 public class Main {
     public static void main(String[] args) {
-        gameFrame1 mainFrame = new gameFrame1();
-        mainFrame.setVisible(true);
+        Player p1 = new Player();
     }
 }
-class gameFrame1 extends JFrame implements ActionListener {
+class GameFrame1 extends JFrame implements ActionListener {
     private JPanel mainPanel, leftPanel, rightPanel, centerPanel, subPanelPlayers;
     private JLabel imgLabel, imgLabel2, lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1,
             speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2;
@@ -18,7 +17,7 @@ class gameFrame1 extends JFrame implements ActionListener {
     private JButton button1, button2, button3, button4, button5;
     private JScrollPane scrollPane;
     private JTextArea console;
-    gameFrame1() {
+    GameFrame1() {
         setSize(960, 680);
         setTitle("RacesBattle");
         setLocation(100, 600);
@@ -37,7 +36,7 @@ class gameFrame1 extends JFrame implements ActionListener {
         button4 = new JButton("Fight");
         button5 = new JButton("Clear Console");
 
-        console = new JTextArea(5, 70);
+        console = new JTextArea("Welcome to the game!",5, 70);
         console.setEditable(false);
         console.setLineWrap(false);
 
@@ -175,12 +174,14 @@ class gameFrame1 extends JFrame implements ActionListener {
         button3.addActionListener(this);
         button4.addActionListener(this);
         button5.addActionListener(this);
+
+        setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Choose Character")) {
-            new CharactersWindow();
+            new CharactersWindow(player1);
         }
         else if (e.getActionCommand().equals("Choose Weapon")) {
             System.out.println("Choose weapon");
@@ -193,13 +194,16 @@ class gameFrame1 extends JFrame implements ActionListener {
         }
         else if (e.getActionCommand().equals("Clear Console")) {
             System.out.println("Clear Console");
+            console.setText("");
         }
     }
 }
 class CharactersWindow extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JButton warrior1, warrior2, warrior3, warrior4, warrior5, warrior6, warrior7, warrior8, warrior9;
-    CharactersWindow() {
+    private Warrior pj1;
+    CharactersWindow(Warrior pj1) {
+        this.pj1 = pj1;
         setSize(960, 680);
         setTitle("Select Character");
         setLocation(100, 600);
@@ -259,16 +263,32 @@ class CharactersWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("Selecciono personaje");
         if (e.getActionCommand().equals("Legolas")) {
-            System.out.println("Click on warrior1");
+            System.out.println("Click on warrior1, legolas");
+
         }
-        else if (e.getActionCommand().equals("warrior1")) {
-            System.out.println("Click on warrior1");
+        else if (e.getActionCommand().equals("Isildur")) {
+            System.out.println("Click on warrior2, Isildur");
         }
-        else if (e.getActionCommand().equals("warrior1")) {
-            System.out.println("Click on warrior1");
+        else if (e.getActionCommand().equals("Eru")) {
+            System.out.println("Click on warrior3, Eru");
         }
-        else if (e.getActionCommand().equals("warrior1")) {
-            System.out.println("Click on warrior1");
+        else if (e.getActionCommand().equals("Arthur Pendragon")) {
+            System.out.println("Click on warrior4, Arthur Pendragon");
+        }
+        else if (e.getActionCommand().equals("Siegfried")) {
+            System.out.println("Click on warrior5, Siegfried");
+        }
+        else if (e.getActionCommand().equals("Sir William Wallace")) {
+            System.out.println("Click on warrior6, Sir William Wallace");
+        }
+        else if (e.getActionCommand().equals("Brokk")) {
+            System.out.println("Click on warrior7, Brokk");
+        }
+        else if (e.getActionCommand().equals("Guldrak")) {
+            System.out.println("Click on warrior8, Guldrak");
+        }
+        else if (e.getActionCommand().equals("Krumgrom")) {
+            System.out.println("Click on warrior9, Krumgrom");
         }
     }
 }
