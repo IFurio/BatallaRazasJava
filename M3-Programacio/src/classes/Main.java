@@ -219,6 +219,16 @@ class CharactersWindow extends JFrame implements ActionListener {
         warrior9 = new JButton(new ImageIcon("M3-Programacio/Images/warrior91.jpg"));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
+        warrior1.setText("Legolas");
+        warrior2.setText("Isildur");
+        warrior3.setText("Eru");
+        warrior4.setText("Arthur Pendragon");
+        warrior5.setText("Siegfried");
+        warrior6.setText("Sir William Wallace");
+        warrior7.setText("Brokk");
+        warrior8.setText("Guldrak");
+        warrior9.setText("Krumgrom");
+
         mainPanel.setLayout(new GridLayout(3,3));
 
         mainPanel.add(warrior1);
@@ -248,9 +258,17 @@ class CharactersWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Selecciono personaje");
-        if (e.getActionCommand().equals("warrior1")) {
+        if (e.getActionCommand().equals("Legolas")) {
             System.out.println("Click on warrior1");
-
+        }
+        else if (e.getActionCommand().equals("warrior1")) {
+            System.out.println("Click on warrior1");
+        }
+        else if (e.getActionCommand().equals("warrior1")) {
+            System.out.println("Click on warrior1");
+        }
+        else if (e.getActionCommand().equals("warrior1")) {
+            System.out.println("Click on warrior1");
         }
     }
 }
