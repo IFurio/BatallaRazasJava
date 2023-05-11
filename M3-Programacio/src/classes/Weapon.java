@@ -56,3 +56,4 @@ public class Weapon {
         this.image = image;
     }
 }
+
