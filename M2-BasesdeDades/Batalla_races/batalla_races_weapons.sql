@@ -28,6 +28,7 @@ CREATE TABLE `weapons` (
   `weapon_image_path` varchar(100) DEFAULT NULL,
   `weapon_damage` int NOT NULL,
   `weapon_speed` int NOT NULL,
+  `weapon_points` int NOT NULL,
   PRIMARY KEY (`weapon_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,7 +39,7 @@ CREATE TABLE `weapons` (
 
 LOCK TABLES `weapons` WRITE;
 /*!40000 ALTER TABLE `weapons` DISABLE KEYS */;
-INSERT INTO `weapons` VALUES (1,'Bow','',1,5),(2,'Sword','',1,1),(3,'Daggers','',0,3),(4,'Katana','',2,3),(5,'Poniard','',0,4),(6,'Two handed axe','',5,0),(7,'Scimitar','',1,2),(8,'Double swords','',2,2);
+INSERT INTO `weapons` VALUES (1,'Bow','',1,5,15),(2,'Sword','',1,1,10),(3,'Daggers','',0,3,10),(4,'Katana','',2,3,18),(5,'Poniard','',0,4,12),(6,'Two handed axe','',5,0,20),(7,'Scimitar','',1,2,14),(8,'Double swords','',2,2,14);
 /*!40000 ALTER TABLE `weapons` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-10 17:27:58
+-- Dump completed on 2023-05-11 19:40:30
