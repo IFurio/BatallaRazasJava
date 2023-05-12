@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<battle>
+        <battle_id>1</battle_id>
+        <player_id>          1</player_id>
+        <warrior_id>         1</warrior_id>
+        <warrior_weapon_id>  1</warrior_weapon_id>
+        <opponent_id>        2</opponent_id>
+        <opponent_weapon_id> 2</opponent_weapon_id>
+        <injuries_caused>    100</injuries_caused>
+        <injuries_suffered>  200</injuries_suffered>
+        <battle_points>      3000</battle_points>
+</battle>
+<battle>
+        <battle_id>1</battle_id>
+        <player_id>          1</player_id>
+        <warrior_id>         1</warrior_id>
+        <warrior_weapon_id>  1</warrior_weapon_id>
+        <opponent_id>        2</opponent_id>
+        <opponent_weapon_id> 2</opponent_weapon_id>
+        <injuries_caused>    100</injuries_caused>
+        <injuries_suffered>  200</injuries_suffered>
+        <battle_points>      3000</battle_points>
+</battle>
