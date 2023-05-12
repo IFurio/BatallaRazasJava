@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `players`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `players` (
-  `player_id` int NOT NULL,
+  `player_id` int NOT NULL AUTO_INCREMENT,
   `player_name` varchar(25) NOT NULL,
   `global_points` int NOT NULL,
   `total_damage` int NOT NULL,
@@ -39,7 +39,6 @@ CREATE TABLE `players` (
 
 LOCK TABLES `players` WRITE;
 /*!40000 ALTER TABLE `players` DISABLE KEYS */;
-INSERT INTO `players` VALUES (1,'Paco',20,31,15,1),(2,'Miguel',45,80,23,2);
 /*!40000 ALTER TABLE `players` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-10 17:27:58
+-- Dump completed on 2023-05-12 18:27:11

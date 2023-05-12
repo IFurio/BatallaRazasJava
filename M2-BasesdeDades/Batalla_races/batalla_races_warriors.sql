@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `warriors`;
 CREATE TABLE `warriors` (
   `warrior_id` int NOT NULL,
   `warrior_name` varchar(45) NOT NULL,
-  `warrior_image_path` varchar(45) DEFAULT NULL,
+  `warrior_image_path` varchar(100) DEFAULT NULL,
   `race` varchar(15) NOT NULL,
   `health_points` int NOT NULL,
   `damage_points` int NOT NULL,
@@ -33,6 +33,7 @@ CREATE TABLE `warriors` (
   `defense_points` int NOT NULL,
   `agility_points` int NOT NULL,
   `race_points` int NOT NULL,
+  `warrior_sprite` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`warrior_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -43,7 +44,7 @@ CREATE TABLE `warriors` (
 
 LOCK TABLES `warriors` WRITE;
 /*!40000 ALTER TABLE `warriors` DISABLE KEYS */;
-INSERT INTO `warriors` VALUES (1,'Legolas','','Elf',40,4,7,2,7,19),(2,'Isildur','','Elf',40,4,7,2,7,19),(3,'Eru','','Elf',40,4,7,2,7,19),(4,'Arthur Pendragon','','Human',50,5,5,3,6,20),(5,'Siegfried ','','Human',50,5,5,3,6,20),(6,'Sir William Wallace','','Human',50,5,5,3,6,20),(7,'Brokk','','Dwarf',60,6,3,4,5,21),(8,'Guldrak','','Dwarf',60,6,3,4,5,21),(9,'Krumgrom','','Dwarf',60,6,3,4,5,21);
+INSERT INTO `warriors` VALUES (1,'Legolas','M3-Programacio/Images/warrior11.png','Elf',40,4,7,2,7,19,'M3-Programacio/Images/warrior1.png'),(2,'Isildur','M3-Programacio/Images/warrior21.png','Elf',40,4,7,2,7,19,'M3-Programacio/Images/warrior2.png'),(3,'Eru','M3-Programacio/Images/warrior31.png','Elf',40,4,7,2,7,19,'M3-Programacio/Images/warrior3.png'),(4,'Arthur Pendragon','M3-Programacio/Images/warrior41.png','Human',50,5,5,3,6,20,'M3-Programacio/Images/warrior4.png'),(5,'Siegfried ','M3-Programacio/Images/warrior51.png','Human',50,5,5,3,6,20,'M3-Programacio/Images/warrior5.png'),(6,'Sir William Wallace','M3-Programacio/Images/warrior61.png','Human',50,5,5,3,6,20,'M3-Programacio/Images/warrior6.png'),(7,'Brokk','M3-Programacio/Images/warrior71.png','Dwarf',60,6,3,4,5,21,'M3-Programacio/Images/warrior7.png'),(8,'Guldrak','M3-Programacio/Images/warrior81.png','Dwarf',60,6,3,4,5,21,'M3-Programacio/Images/warrior8.png'),(9,'Krumgrom','M3-Programacio/Images/warrior91.png','Dwarf',60,6,3,4,5,21,'M3-Programacio/Images/warrior9.png');
 /*!40000 ALTER TABLE `warriors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-10 17:27:58
+-- Dump completed on 2023-05-12 18:27:11

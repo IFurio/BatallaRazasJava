@@ -39,7 +39,7 @@ CREATE TABLE `weapons` (
 
 LOCK TABLES `weapons` WRITE;
 /*!40000 ALTER TABLE `weapons` DISABLE KEYS */;
-INSERT INTO `weapons` VALUES (1,'Bow','',1,5,15),(2,'Sword','',1,1,10),(3,'Daggers','',0,3,10),(4,'Katana','',2,3,18),(5,'Poniard','',0,4,12),(6,'Two handed axe','',5,0,20),(7,'Scimitar','',1,2,14),(8,'Double swords','',2,2,14);
+INSERT INTO `weapons` VALUES (1,'Bow','M3-Programacio/Images/weapon61.png',1,5,15),(2,'Sword','M3-Programacio/Images/weapon21.png',1,1,10),(3,'Daggers','M3-Programacio/Images/weapon11.png',0,3,10),(4,'Katana','M3-Programacio/Images/weapon71.png',2,3,18),(5,'Poniard','M3-Programacio/Images/weapon81.png',0,4,12),(6,'Two handed axe','M3-Programacio/Images/weapon91.png',5,0,20),(7,'Scimitar','M3-Programacio/Images/weapon51.png',1,2,14),(8,'Double swords','M3-Programacio/Images/weapon41.png',2,2,14),(9,'Hatchet','M3-Programacio/Images/weapon31.png',3,0,10);
 /*!40000 ALTER TABLE `weapons` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-11 19:40:30
+-- Dump completed on 2023-05-12 18:27:11
