@@ -114,14 +114,12 @@ class GameFrame1 extends JFrame implements ActionListener {
         player1 = new Warrior(2, "Head Hunter", "Human", 50, 5, 3, 6, 6, "M3-Programacio/Images/warrior2.png",20);
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
-        playerImg1 = new JLabel(new ImageIcon(player2.getImgUrl()));
-        playerImg2 = new JLabel(new ImageIcon(player1.getImgUrl()));
+        playerImg1 = new JLabel(new ImageIcon(player1.getImgUrl()));
+        playerImg2 = new JLabel(new ImageIcon(player2.getImgUrl()));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         imgLabel2.setBounds(0, 300, getWidth(), getHeight());
         imgLabel2.setLocation(300,300);
-        //imgLabel2.setBackground(Color.RED);
-        //imgLabel2.setOpaque(true);
         imgLabel.setBounds(0, -70, getWidth(), getHeight());
 
         mainPanel.add(imgLabel);
@@ -184,6 +182,9 @@ class GameFrame1 extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Choose Character")) {
             new CharactersWindow(player1);
+            // hacer calculo de botones segun guerreros
+            // hacer gridlayout con un for que recorra la arraylist de guerreros
+            // crear una clase que extienda de boton y meterle un atributo que sea el warrior id
         }
         else if (e.getActionCommand().equals("Choose Weapon")) {
             System.out.println("Choose weapon");
@@ -215,14 +216,14 @@ class CharactersWindow extends JFrame implements ActionListener {
         mainPanel = new JPanel();
 
         warrior1 = new JButton(new ImageIcon("M3-Programacio/Images/warrior11.png"));
-        warrior2 = new JButton(new ImageIcon("M3-Programacio/Images/warrior21.jpg"));
+        warrior2 = new JButton(new ImageIcon("M3-Programacio/Images/warrior21.png"));
         warrior3 = new JButton(new ImageIcon("M3-Programacio/Images/warrior31.png"));
         warrior4 = new JButton(new ImageIcon("M3-Programacio/Images/warrior41.png"));
-        warrior5 = new JButton(new ImageIcon("M3-Programacio/Images/warrior51.jpg"));
-        warrior6 = new JButton(new ImageIcon("M3-Programacio/Images/warrior61.jpg"));
+        warrior5 = new JButton(new ImageIcon("M3-Programacio/Images/warrior51.png"));
+        warrior6 = new JButton(new ImageIcon("M3-Programacio/Images/warrior61.png"));
         warrior7 = new JButton(new ImageIcon("M3-Programacio/Images/warrior71.png"));
-        warrior8 = new JButton(new ImageIcon("M3-Programacio/Images/warrior81.jpg"));
-        warrior9 = new JButton(new ImageIcon("M3-Programacio/Images/warrior91.jpg"));
+        warrior8 = new JButton(new ImageIcon("M3-Programacio/Images/warrior81.png"));
+        warrior9 = new JButton(new ImageIcon("M3-Programacio/Images/warrior91.png"));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         warrior1.setText("Legolas");
@@ -293,4 +294,8 @@ class CharactersWindow extends JFrame implements ActionListener {
             System.out.println("Click on warrior9, Krumgrom");
         }
     }
+}
+class WarriorButon extends JButton {
+    private int id;
+
 }

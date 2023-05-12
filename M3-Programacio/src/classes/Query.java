@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Query {
+    private WarriorContainer mainWarriorList;
+    private WeaponContainer mainWeaponContainer;
     public void dataBaseLogin() { // it is used to connect to a database
         String url = "jdbc:mysql://localhost/batalla_races?serverTimezone=UTC";
         String user = "isaac"; // make sure these are your current credentials
@@ -38,8 +40,8 @@ public class Query {
                 points = rs.getInt(10);
                 Warrior warrior = new Warrior(id,name,race,life,force,defense,agility,speed,image,points);
                 warrior_list.add(warrior);
-                WarriorContainer main_warrior_list = new WarriorContainer(warrior_list);
             }
+            mainWarriorList = new WarriorContainer(warrior_list);
         } catch (ClassNotFoundException e) {
             System.out.println("El driver no se ha caragdo correctamente");
         } catch (SQLException e) {
@@ -68,9 +70,8 @@ public class Query {
                 points = rs.getInt(6);
                 Weapon weapon = new Weapon(id,name,speed,force,points,image);
                 weapon_list.add(weapon);
-                WeaponContainer main_warrior_list = new WeaponContainer(weapon_list);
             }
-
+            mainWeaponContainer = new WeaponContainer(weapon_list);
         } catch (ClassNotFoundException e) {
             System.out.println("El driver no se ha caragdo correctamente");
         } catch (SQLException e) {
@@ -89,6 +90,13 @@ public class Query {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public WarriorContainer getMainWarriorList() {
+        return mainWarriorList;
+    }
+    public WeaponContainer getMainWeaponContainer() {
+        return mainWeaponContainer;
     }
 }
 
