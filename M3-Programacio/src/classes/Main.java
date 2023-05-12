@@ -8,7 +8,10 @@ public class Main {
     public static void main(String[] args) {
         Query ddbb = new Query();
         ddbb.dataBaseLogin();
-        Player p1 = new Player();
+        InitialConfigurations p1 = new InitialConfigurations();
+
+
+
     }
 }
 class GameFrame1 extends JFrame implements ActionListener {
@@ -205,6 +208,7 @@ class CharactersWindow extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JButton warrior1, warrior2, warrior3, warrior4, warrior5, warrior6, warrior7, warrior8, warrior9;
     private Warrior pj1;
+
     CharactersWindow(Warrior pj1) {
         this.pj1 = pj1;
         setSize(960, 680);

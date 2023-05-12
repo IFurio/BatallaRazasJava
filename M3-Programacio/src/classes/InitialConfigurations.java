@@ -7,12 +7,12 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Player extends JFrame implements ActionListener {
+public class InitialConfigurations extends JFrame implements ActionListener {
     private String name;
     private int id;
     private JTextField fill;
 
-    public Player() {
+    public InitialConfigurations() {
         setSize(500, 200);
         setTitle("Insert Your Name");
         setLocation(100, 600);
