@@ -24,7 +24,6 @@ def transform():
    # Transformar l'arxiu de dades-microsiervos.rss segons l'arxiu template-microsiervos.xsl
    transform = etree.XSLT(xslTree)
    htmlDom = transform(xmlTree)
-   print(htmlDom)
    htmlResult = etree.tostring(htmlDom, pretty_print=True).decode('utf-8')
    write_html("./html/battle.html", htmlResult)
 
