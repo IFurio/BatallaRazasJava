@@ -3,10 +3,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        new InitialConfigurations(); // MAKE SURE THESE ARE YOUR CURRENT CREDENTIALS!!!!!!!
+        // ENTER TO THE QUERY CLASS TO MAKE SURE YOU ARE USING YOUR CURRENT CREDENTIALS!!!!!
+        new InitialConfigurations(); // This is used to config the playername
 
     }
 }
@@ -18,6 +20,7 @@ class GameFrame1 extends JFrame implements ActionListener {
     private JButton button1, button2, button3, button4, button5;
     private JScrollPane scrollPane;
     private JTextArea console;
+    private ArrayList<Warrior> warriorsList;
     GameFrame1() {
         setSize(960, 680);
         setTitle("RacesBattle");
@@ -109,12 +112,20 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         mainPanel.setLayout(new BorderLayout());
 
-        player2 = new Warrior(1, "Link", "Elf", 40, 4, 2, 7, 7, "M3-Programacio/Images/warrior1.png",19);
-        player1 = new Warrior(2, "Head Hunter", "Human", 50, 5, 3, 6, 6, "M3-Programacio/Images/warrior2.png",20);
+        // set an empty warrior for the player. Later the warrior will be chosen
+        player1 = new Warrior(0, "", "", 0, 0, 0, 0, 0, "","", 0);
+
+        // select a random bot warrior
+        Query query = new Query();
+        query.warrior_getdata();
+        warriorsList = query.getMainWarriorContainer().getWarriors();
+
+        player2 = warriorsList.get((int)(Math.random()*warriorsList.size()));
+
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
-        playerImg1 = new JLabel(new ImageIcon(player1.getImgUrl()));
-        playerImg2 = new JLabel(new ImageIcon(player2.getImgUrl()));
+        playerImg1 = new JLabel(); // this will later contain the warrior sprite image
+        playerImg2 = new JLabel(new ImageIcon(player2.getSpriteUrl()));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         imgLabel2.setBounds(0, 300, getWidth(), getHeight());
@@ -180,7 +191,7 @@ class GameFrame1 extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Choose Character")) {
-            new CharactersWindow(player1);
+            new CharactersWindow(player1, warriorsList, playerImg1);
             // hacer calculo de botones segun guerreros
             // hacer gridlayout con un for que recorra la arraylist de guerreros
             // crear una clase que extienda de boton y meterle un atributo que sea el warrior id
@@ -200,13 +211,17 @@ class GameFrame1 extends JFrame implements ActionListener {
         }
     }
 }
-class CharactersWindow extends JFrame implements ActionListener {
+class CharactersWindow extends JFrame {
     private JPanel mainPanel;
-    private JButton warrior1, warrior2, warrior3, warrior4, warrior5, warrior6, warrior7, warrior8, warrior9;
+    private WarriorButon warrior1, warrior2, warrior3, warrior4, warrior5, warrior6, warrior7, warrior8, warrior9;
     private Warrior pj1;
+    private ArrayList<Warrior> warriorsList;
+    private JLabel playerImg1;
 
-    CharactersWindow(Warrior pj1) {
+    CharactersWindow(Warrior pj1, ArrayList<Warrior> warriorsList, JLabel playerImg1) {
         this.pj1 = pj1;
+        this.warriorsList = warriorsList;
+        this.playerImg1 = playerImg1;
         setSize(960, 680);
         setTitle("Select Character");
         setLocation(100, 600);
@@ -215,87 +230,37 @@ class CharactersWindow extends JFrame implements ActionListener {
 
         mainPanel = new JPanel();
 
-        warrior1 = new JButton(new ImageIcon("M3-Programacio/Images/warrior11.png"));
-        warrior2 = new JButton(new ImageIcon("M3-Programacio/Images/warrior21.png"));
-        warrior3 = new JButton(new ImageIcon("M3-Programacio/Images/warrior31.png"));
-        warrior4 = new JButton(new ImageIcon("M3-Programacio/Images/warrior41.png"));
-        warrior5 = new JButton(new ImageIcon("M3-Programacio/Images/warrior51.png"));
-        warrior6 = new JButton(new ImageIcon("M3-Programacio/Images/warrior61.png"));
-        warrior7 = new JButton(new ImageIcon("M3-Programacio/Images/warrior71.png"));
-        warrior8 = new JButton(new ImageIcon("M3-Programacio/Images/warrior81.png"));
-        warrior9 = new JButton(new ImageIcon("M3-Programacio/Images/warrior91.png"));
-        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
-
-        warrior1.setText("Legolas");
-        warrior2.setText("Isildur");
-        warrior3.setText("Eru");
-        warrior4.setText("Arthur Pendragon");
-        warrior5.setText("Siegfried");
-        warrior6.setText("Sir William Wallace");
-        warrior7.setText("Brokk");
-        warrior8.setText("Guldrak");
-        warrior9.setText("Krumgrom");
-
         mainPanel.setLayout(new GridLayout(3,3));
 
-        mainPanel.add(warrior1);
-        mainPanel.add(warrior2);
-        mainPanel.add(warrior3);
-        mainPanel.add(warrior4);
-        mainPanel.add(warrior5);
-        mainPanel.add(warrior6);
-        mainPanel.add(warrior7);
-        mainPanel.add(warrior8);
-        mainPanel.add(warrior9);
+        for (int i = 0; i<warriorsList.size() - 1; i++){ // we create a button for each of the warriors on the list
+            WarriorButon warriorButon;
+            Warrior currentWarrior = warriorsList.get(i);
+            warriorButon = new WarriorButon(currentWarrior, pj1, playerImg1, new ImageIcon(currentWarrior.getImgUrl()));
+            mainPanel.add(warriorButon);
+            warriorButon.addActionListener(warriorButon);
+        }
+
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         add(mainPanel);
 
-        warrior1.addActionListener(this);
-        warrior2.addActionListener(this);
-        warrior3.addActionListener(this);
-        warrior4.addActionListener(this);
-        warrior5.addActionListener(this);
-        warrior6.addActionListener(this);
-        warrior7.addActionListener(this);
-        warrior8.addActionListener(this);
-        warrior9.addActionListener(this);
-
         setVisible(true);
     }
+}
+class WarriorButon extends JButton implements ActionListener {
+    private Warrior warrior, pj1;
+    private JLabel playerImg1;
+
+    WarriorButon(Warrior warrior, Warrior pj1, JLabel playerImg1, ImageIcon img) {
+        super(img);
+        this.warrior = warrior;
+        this.pj1 = pj1;
+        this.playerImg1 = playerImg1;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Selecciono personaje");
-        if (e.getActionCommand().equals("Legolas")) {
-            System.out.println("Click on warrior1, legolas");
-
-        }
-        else if (e.getActionCommand().equals("Isildur")) {
-            System.out.println("Click on warrior2, Isildur");
-        }
-        else if (e.getActionCommand().equals("Eru")) {
-            System.out.println("Click on warrior3, Eru");
-        }
-        else if (e.getActionCommand().equals("Arthur Pendragon")) {
-            System.out.println("Click on warrior4, Arthur Pendragon");
-        }
-        else if (e.getActionCommand().equals("Siegfried")) {
-            System.out.println("Click on warrior5, Siegfried");
-        }
-        else if (e.getActionCommand().equals("Sir William Wallace")) {
-            System.out.println("Click on warrior6, Sir William Wallace");
-        }
-        else if (e.getActionCommand().equals("Brokk")) {
-            System.out.println("Click on warrior7, Brokk");
-        }
-        else if (e.getActionCommand().equals("Guldrak")) {
-            System.out.println("Click on warrior8, Guldrak");
-        }
-        else if (e.getActionCommand().equals("Krumgrom")) {
-            System.out.println("Click on warrior9, Krumgrom");
-        }
+        pj1 = warrior;
+        playerImg1 = new JLabel(new ImageIcon(warrior.getSpriteUrl()));
     }
-}
-class WarriorButon extends JButton {
-    private int id;
-
 }
