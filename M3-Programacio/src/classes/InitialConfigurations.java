@@ -58,11 +58,11 @@ public class InitialConfigurations extends JFrame implements ActionListener {
             setName(fill.getText());
             Query users = new Query();
             ResultSet rs;
-            rs = users.makeSelect("jdbc:mysql://localhost/batalla_races?serverTimezone=UTC", "isaac", "1234", "select max(player_id) from players");
+            rs = users.makeSelect("select max(player_id) from players");
             try {
                 rs.next();
                 setId(rs.getInt(1) + 1);
-                System.out.println(getId());
+                users.closeConnections();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
