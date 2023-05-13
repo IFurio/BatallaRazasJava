@@ -6,11 +6,7 @@ import java.awt.event.ActionListener;
 
 public class Main {
     public static void main(String[] args) {
-        Query ddbb = new Query();
-        ddbb.dataBaseLogin();
-        InitialConfigurations p1 = new InitialConfigurations();
-
-
+        new InitialConfigurations(); // MAKE SURE THESE ARE YOUR CURRENT CREDENTIALS!!!!!!!
 
     }
 }
