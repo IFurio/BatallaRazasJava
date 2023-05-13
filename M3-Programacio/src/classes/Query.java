@@ -11,12 +11,12 @@ public class Query {
     private Connection con;
     private Statement stm;
     private ResultSet rs;
-    private WarriorContainer mainWarriorList;
+    private WarriorContainer mainWarriorContainer;
     private WeaponContainer mainWeaponContainer;
 
     public void warrior_getdata() { // this is used to get all the warriors from the database
         int id,life,force,defense,agility,speed,points;
-        String name,race,image;
+        String name,race,image, sprite;
         ArrayList<Warrior> warrior_list = new ArrayList<>();
 
         try {
@@ -36,10 +36,11 @@ public class Query {
                 defense = rs.getInt(8);
                 agility = rs.getInt(9);
                 points = rs.getInt(10);
-                Warrior warrior = new Warrior(id,name,race,life,force,defense,agility,speed,image,points);
+                sprite = rs.getString(11);
+                Warrior warrior = new Warrior(id,name,race,life,force,defense,agility,speed,image,sprite,points);
                 warrior_list.add(warrior);
             }
-            mainWarriorList = new WarriorContainer(warrior_list);
+            mainWarriorContainer = new WarriorContainer(warrior_list);
             closeConnections();
         } catch (ClassNotFoundException e) {
             System.out.println("Driver not loaded correctly");
@@ -100,9 +101,8 @@ public class Query {
             throw new RuntimeException(e);
         }
     }
-
-    public WarriorContainer getMainWarriorList() {
-        return mainWarriorList;
+    public WarriorContainer getMainWarriorContainer() {
+        return mainWarriorContainer;
     }
     public WeaponContainer getMainWeaponContainer() {
         return mainWeaponContainer;

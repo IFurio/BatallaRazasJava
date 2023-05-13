@@ -11,9 +11,10 @@ public class Warrior {
     private int agility;
     private int speed;
     private String imgUrl;
+    private String spriteUrl;
     private int points;
 
-    public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, String imgUrl, int points) {
+    public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, String imgUrl, String spriteUrl, int points) {
         this.id = id;
         this.name = name;
         this.race = race;
@@ -23,6 +24,7 @@ public class Warrior {
         this.agility = agility;
         this.speed = speed;
         this.imgUrl = imgUrl;
+        this.spriteUrl = spriteUrl;
         this.points = points;
     }
 
@@ -77,8 +79,14 @@ public class Warrior {
     public String getImgUrl() {
         return imgUrl;
     }
-    public void setimageUrl(String imgUrl) {
+    public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+    public String getSpriteUrl() {
+        return spriteUrl;
+    }
+    public void setSpriteUrl(String spriteUrl) {
+        this.spriteUrl = spriteUrl;
     }
     public int getPoints() {
         return points;
