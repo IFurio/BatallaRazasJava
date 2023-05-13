@@ -48,6 +48,14 @@ class GameFrame1 extends JFrame implements ActionListener {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+        // set an empty warrior for the player. Later the warrior will be chosen
+        player1 = new Warrior(0, "", "", 0, 0, 0, 0, 0, "","", 0);
+
+        Query query = new Query();
+        query.warrior_getdata(); // set WarriorContainer class
+        warriorsList = query.getMainWarriorContainer().getWarriors(); // get the warrior list
+        player2 = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
+
         lifeBar1 = new JLabel("100%");
         lifeBar1.setBackground(Color.GREEN);
         lifeBar1.setBounds(50, 30, 250, 10);
@@ -67,7 +75,7 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         powerBar2 = new JLabel("Power");
         powerBar2.setBackground(Color.RED);
-        powerBar2.setBounds(390, 50, 250, 10);
+        powerBar2.setBounds(390, 50, 250, 10); // max width 250
         powerBar2.setOpaque(true);
 
         agilityBar1 = new JLabel("Agility");
@@ -111,16 +119,6 @@ class GameFrame1 extends JFrame implements ActionListener {
         button5.setBackground(Color.YELLOW);
 
         mainPanel.setLayout(new BorderLayout());
-
-        // set an empty warrior for the player. Later the warrior will be chosen
-        player1 = new Warrior(0, "", "", 0, 0, 0, 0, 0, "","", 0);
-
-        // select a random bot warrior
-        Query query = new Query();
-        query.warrior_getdata();
-        warriorsList = query.getMainWarriorContainer().getWarriors();
-
-        player2 = warriorsList.get((int)(Math.random()*warriorsList.size()));
 
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
@@ -213,7 +211,6 @@ class GameFrame1 extends JFrame implements ActionListener {
 }
 class CharactersWindow extends JFrame {
     private JPanel mainPanel;
-    private WarriorButon warrior1, warrior2, warrior3, warrior4, warrior5, warrior6, warrior7, warrior8, warrior9;
     private Warrior pj1;
     private ArrayList<Warrior> warriorsList;
     private JLabel playerImg1;
@@ -230,9 +227,14 @@ class CharactersWindow extends JFrame {
 
         mainPanel = new JPanel();
 
-        mainPanel.setLayout(new GridLayout(3,3));
+        int numRows = warriorsList.size() / 3; // the number of rows is calculated according to the number of warriors
+        if (warriorsList.size() % 3 != 0) {
+            numRows++;
+        }
 
-        for (int i = 0; i<warriorsList.size() - 1; i++){ // we create a button for each of the warriors on the list
+        mainPanel.setLayout(new GridLayout(numRows,3));
+
+        for (int i = 0; i<warriorsList.size(); i++){ // we create a button for each of the warriors on the list
             WarriorButon warriorButon;
             Warrior currentWarrior = warriorsList.get(i);
             warriorButon = new WarriorButon(currentWarrior, pj1, playerImg1, new ImageIcon(currentWarrior.getImgUrl()));
@@ -261,6 +263,7 @@ class WarriorButon extends JButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         pj1 = warrior;
-        playerImg1 = new JLabel(new ImageIcon(warrior.getSpriteUrl()));
+        ImageIcon img = new ImageIcon(warrior.getSpriteUrl());
+        playerImg1.setIcon(img);
     }
 }
