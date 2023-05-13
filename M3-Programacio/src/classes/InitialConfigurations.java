@@ -18,6 +18,7 @@ public class InitialConfigurations extends JFrame implements ActionListener {
         setLocation(100, 600);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         JPanel mainPanel = new JPanel();
         JLabel text = new JLabel("Insert your name:");
