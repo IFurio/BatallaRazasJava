@@ -7,17 +7,18 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Player extends JFrame implements ActionListener {
+public class InitialConfigurations extends JFrame implements ActionListener {
     private String name;
     private int id;
     private JTextField fill;
 
-    public Player() {
+    public InitialConfigurations() {
         setSize(500, 200);
         setTitle("Insert Your Name");
         setLocation(100, 600);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         JPanel mainPanel = new JPanel();
         JLabel text = new JLabel("Insert your name:");
@@ -58,11 +59,11 @@ public class Player extends JFrame implements ActionListener {
             setName(fill.getText());
             Query users = new Query();
             ResultSet rs;
-            rs = users.makeSelect("jdbc:mysql://localhost/batalla_races?serverTimezone=UTC", "isaac", "1234", "select max(player_id) from players");
+            rs = users.makeSelect("select max(player_id) from players");
             try {
                 rs.next();
                 setId(rs.getInt(1) + 1);
-                System.out.println(getId());
+                users.closeConnections();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }

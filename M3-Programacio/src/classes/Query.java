@@ -4,28 +4,26 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Query {
-    private WarriorContainer mainWarriorList;
+    // MAKE SURE THESE ARE YOUR CURRENT CREDENTIALS!!!!!!!
+    private final String url = "jdbc:mysql://localhost/batalla_races?serverTimezone=UTC";
+    private final String user = "isaac";
+    private final String pass = "1234";
+    private Connection con;
+    private Statement stm;
+    private ResultSet rs;
+    private WarriorContainer mainWarriorContainer;
     private WeaponContainer mainWeaponContainer;
-    public void dataBaseLogin() { // it is used to connect to a database
-        String url = "jdbc:mysql://localhost/batalla_races?serverTimezone=UTC";
-        String user = "isaac"; // make sure these are your current credentials
-        String pass = "1234";
-        Query query = new Query();
 
-        query.warrior_getdata(url,user,pass);
-        query.weapon_getdata(url,user,pass);
-
-    }
-    public void warrior_getdata(String url, String user, String pass) {
+    public void warrior_getdata() { // this is used to get all the warriors from the database
         int id,life,force,defense,agility,speed,points;
-        String name,race,image;
+        String name,race,image, sprite;
         ArrayList<Warrior> warrior_list = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(url, user, pass);
-            Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select * from warriors");
+            con = DriverManager.getConnection(url, user, pass);
+            stm = con.createStatement();
+            rs = stm.executeQuery("select * from warriors");
 
             while (rs.next()) {
                 id = rs.getInt(1);
@@ -38,28 +36,29 @@ public class Query {
                 defense = rs.getInt(8);
                 agility = rs.getInt(9);
                 points = rs.getInt(10);
-                Warrior warrior = new Warrior(id,name,race,life,force,defense,agility,speed,image,points);
+                sprite = rs.getString(11);
+                Warrior warrior = new Warrior(id,name,race,life,force,defense,agility,speed,image,sprite,points);
                 warrior_list.add(warrior);
             }
-            mainWarriorList = new WarriorContainer(warrior_list);
+            mainWarriorContainer = new WarriorContainer(warrior_list);
+            closeConnections();
         } catch (ClassNotFoundException e) {
-            System.out.println("El driver no se ha caragdo correctamente");
+            System.out.println("Driver not loaded correctly");
         } catch (SQLException e) {
-            System.out.println("Conexion no creada correctamente");
+            System.out.println("Connection not created correctly");
         }
 
     }
-
-    public void weapon_getdata(String url, String user, String pass) {
+    public void weapon_getdata() { // this is used to get all the weapons from the database
         int id, force, speed, points;
         String name, image;
         ArrayList<Weapon> weapon_list = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(url, user, pass);
-            Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select * from weapons");
+            con = DriverManager.getConnection(url, user, pass);
+            stm = con.createStatement();
+            rs = stm.executeQuery("select * from weapons");
 
             while (rs.next()) {
                 id = rs.getInt(1);
@@ -68,32 +67,42 @@ public class Query {
                 force = rs.getInt(4);
                 speed = rs.getInt(5);
                 points = rs.getInt(6);
-                Weapon weapon = new Weapon(id,name,speed,force,points,image);
+                Weapon weapon = new Weapon(id, name, speed, force, points, image);
                 weapon_list.add(weapon);
             }
             mainWeaponContainer = new WeaponContainer(weapon_list);
+            closeConnections();
         } catch (ClassNotFoundException e) {
-            System.out.println("El driver no se ha caragdo correctamente");
+            System.out.println("Driver not loaded correctly");
         } catch (SQLException e) {
-            System.out.println("Conexion no creada correctamente");
+            System.out.println("Connection not created correctly");
         }
     }
-    public ResultSet makeSelect(String url, String user, String pass, String query) {
+    public ResultSet makeSelect(String query) { // this is used to do selects on the database
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(url, user, pass);
-            Statement stm = con.createStatement();
+            con = DriverManager.getConnection(url, user, pass);
+            stm = con.createStatement();
             return stm.executeQuery(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Connection not created correctly");
             return null;
         } catch (ClassNotFoundException e) {
+            System.out.println("Driver not loaded correctly");
+            return null;
+        }
+    }
+    public void closeConnections() { // this is used to close all the unnecessary resources
+        try {
+            if (rs != null) { rs.close();}
+            if (stm != null) { stm.close();}
+            if (con != null) { con.close();}
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
-    public WarriorContainer getMainWarriorList() {
-        return mainWarriorList;
+    public WarriorContainer getMainWarriorContainer() {
+        return mainWarriorContainer;
     }
     public WeaponContainer getMainWeaponContainer() {
         return mainWeaponContainer;
