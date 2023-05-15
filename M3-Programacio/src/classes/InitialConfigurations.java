@@ -15,7 +15,7 @@ public class InitialConfigurations extends JFrame implements ActionListener {
     public InitialConfigurations() {
         setSize(500, 200);
         setTitle("Insert Your Name");
-        setLocation(100, 600);
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());

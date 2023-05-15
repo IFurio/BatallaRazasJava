@@ -11,7 +11,7 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // ENTER TO THE QUERY CLASS TO MAKE SURE YOU ARE USING YOUR CURRENT CREDENTIALS!!!!!
-        new InitialConfigurations(); // This is used to config the playername
+        new InitialConfigurations(); // This is used to config the player name
 
     }
 }
@@ -28,7 +28,7 @@ class GameFrame1 extends JFrame implements ActionListener {
     GameFrame1() {
         setSize(960, 680);
         setTitle("RacesBattle");
-        setLocation(100, 600);
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -64,13 +64,14 @@ class GameFrame1 extends JFrame implements ActionListener {
         query.weapon_getdata();// set WeaponContainer class
         weaponsList = query.getMainWeaponContainer().getWeapons();
         ResultSet rs;
-        rs = query.makeSelect("select * from weapons_available where warrior_id = " + Integer.toString(player2.getId()));
+        rs = query.makeSelect("select * from weapons_available where warrior_id = " + player2.getId());
         try {
             rs.last();
             int rowCount = rs.getRow();
             rs.beforeFirst();
             rs.absolute((int)(Math.random()*rowCount) + 1); // random weapon id from 1 to x
             player2.setWeaponID(rs.getInt(2));
+            query.closeConnections();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -215,10 +216,10 @@ class GameFrame1 extends JFrame implements ActionListener {
             new CharactersWindow(player1, warriorsList, playerImg1);
         }
         else if (e.getActionCommand().equals("Choose Weapon")) { // click to choose weapon button
-            if (!player1.getName().equals("")) {
-                new WeaponsWindow();
-            }else {
+            if (player1.getName().equals("")) {
                 JOptionPane.showMessageDialog(null, "Choose a character first!!!");
+            }else {
+                new WeaponsWindow();
             }
         }
         else if (e.getActionCommand().equals("Ranking")) { // click to ranking button
@@ -320,7 +321,7 @@ class CharactersWindow extends JFrame {
         this.playerImg1 = playerImg1;
         setSize(960, 680);
         setTitle("Select Character");
-        setLocation(100, 600);
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
