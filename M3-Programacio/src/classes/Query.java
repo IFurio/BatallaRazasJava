@@ -44,8 +44,10 @@ public class Query {
             closeConnections();
         } catch (ClassNotFoundException e) {
             System.out.println("Driver not loaded correctly");
+            e.printStackTrace();
         } catch (SQLException e) {
             System.out.println("Connection not created correctly");
+            e.printStackTrace();
         }
 
     }
@@ -74,8 +76,10 @@ public class Query {
             closeConnections();
         } catch (ClassNotFoundException e) {
             System.out.println("Driver not loaded correctly");
+            e.printStackTrace();
         } catch (SQLException e) {
             System.out.println("Connection not created correctly");
+            e.printStackTrace();
         }
     }
     public ResultSet makeSelect(String query) { // this is used to do selects on the database

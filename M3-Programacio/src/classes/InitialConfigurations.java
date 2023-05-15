@@ -57,16 +57,6 @@ public class InitialConfigurations extends JFrame implements ActionListener {
         }
         else {
             setName(fill.getText());
-            Query users = new Query();
-            ResultSet rs;
-            rs = users.makeSelect("select max(player_id) from players");
-            try {
-                rs.next();
-                setId(rs.getInt(1) + 1);
-                users.closeConnections();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
             dispose();
             new GameFrame1();
         }

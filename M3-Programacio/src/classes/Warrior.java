@@ -1,6 +1,8 @@
 package classes;
 
 import java.awt.image.BufferedImage;
+import java.util.Random;
+
 public class Warrior {
     private int id;
     private String name;
@@ -13,6 +15,7 @@ public class Warrior {
     private String imgUrl;
     private String spriteUrl;
     private int points;
+    private int dealer = 0, dmgAttack = 0, dmgReceived = 0, weaponID = 0;
 
     public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, String imgUrl, String spriteUrl, int points) {
         this.id = id;
@@ -93,5 +96,33 @@ public class Warrior {
     }
     public void setPoints(int points) {
         this.points = points;
+    }
+    public int getDealer(){return dealer;}
+    public void setDealer(int d){this.dealer = d;}
+    public void setDmgAttack(int dmg){this.dmgAttack = dmg;}
+    public int getDmgAttack(){return dmgAttack;}
+    public int getDmgReceived(){return dmgReceived;}
+    public void setDmgReceived(int dmg) {this.dmgReceived = dmg;}
+    public int getWeaponID(){return weaponID;}
+    public void setWeaponID(int w) {this.weaponID = w;}
+
+    public int doAtack() {
+        Random r = new Random();
+        int dmg = 0;
+        int randomInt = r.nextInt(100)+1;
+        if (this.getAgility()*10 > randomInt) {
+            dmg = this.getForce();
+        }
+        return dmg;
+    }
+
+    public void doDefense(int dmg){
+        dmg -= this.getDefense();
+        Random r = new Random();
+        int randomInt = r.nextInt(50)+1;
+        if (this.getAgility() <= randomInt) {
+            this.setLife(this.getLife()-dmg);
+            this.setDmgReceived(dmg);
+        }
     }
 }
