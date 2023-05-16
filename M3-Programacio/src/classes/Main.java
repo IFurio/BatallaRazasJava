@@ -317,18 +317,20 @@ class GameFrame1 extends JFrame implements ActionListener {
                 //When there is someone with no HP
                 if (player1.getLife() <= 0) {
                     console.setText(console.getText() + "\nThe player lose, " + player2.getName() + " wins.");
-                    new Replay(false, player1, player2, warriorsList, weaponsList);
+                    new Replay(false, player1, player2, warriorsList, weaponsList,
+                            lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
                 } else if (player2.getLife() <= 0) {
                     console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
-                    new Replay(true, player1, player2, warriorsList, weaponsList);
+                    new Replay(true, player1, player2, warriorsList, weaponsList,
+                            lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
                 }
 
             }
             button4.setEnabled(true);
         }
         else if (e.getActionCommand().equals("Clear Console")) {
-            System.out.println("Clear Console");
             console.setText("");
+            System.out.println(player2.getName());
         }
     }
 }
@@ -540,21 +542,15 @@ class Ranking extends JFrame {
         setVisible(true);
     }
 }
-class Replay extends JDialog implements ActionListener {
+class Replay extends JDialog {
     private JPanel mainPanel, subPanel;
     private JLabel label;
-    private JButton buttonYes, buttonNo;
-    private Boolean winner;
-    private Warrior warrior1, warrior2;
-    private ArrayList<Warrior> warriorsList;
-    private ArrayList<Weapon> weaponsList;
+    private CustomButton buttonYes, buttonNo;
 
-    Replay (Boolean winner, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList, ArrayList<Weapon> weaponsList) {
-        this.winner = winner;
-        this.warrior1 = warrior1;
-        this.warrior2 = warrior2;
-        this.warriorsList = warriorsList;
-        this.weaponsList = weaponsList;
+    Replay (Boolean winner, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
+            ArrayList<Weapon> weaponsList, JLabel lifeBar2, JLabel powerBar2, JLabel agilityBar2, JLabel speedBar2,
+            JLabel defenseBar2, JLabel playerImg2) {
+
         setSize(300, 200);
         setTitle("Keep Fight");
         setLocation(400, 100);
@@ -566,8 +562,10 @@ class Replay extends JDialog implements ActionListener {
         mainPanel = new JPanel();
         subPanel = new JPanel();
         label = new JLabel("Do you want to keep fighting?");
-        buttonYes = new JButton("Yes");
-        buttonNo = new JButton("No");
+        buttonYes = new CustomButton("Yes", winner, warrior1, warrior2, warriorsList,
+                weaponsList, lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
+        buttonNo = new CustomButton("No", winner, warrior1, warrior2, warriorsList,
+                weaponsList, lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
 
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         subPanel.setLayout(new BorderLayout(0, 10));
@@ -578,22 +576,50 @@ class Replay extends JDialog implements ActionListener {
 
         add(mainPanel);
 
-        buttonYes.addActionListener(this);
-        buttonNo.addActionListener(this);
+        buttonYes.addActionListener(buttonYes);
+        buttonNo.addActionListener(buttonNo);
 
         setVisible(true);
     }
+
+}
+class CustomButton extends JButton implements ActionListener {
+    private Boolean winner;
+    private Warrior warrior1, warrior2;
+    private ArrayList<Warrior> warriorsList;
+    private ArrayList<Weapon> weaponsList;
+    private JLabel lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2;
+    private JLabel playerImg2;
+
+    CustomButton (String textbutton, Boolean winner, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
+                  ArrayList<Weapon> weaponsList, JLabel lifeBar2, JLabel powerBar2, JLabel agilityBar2, JLabel speedBar2,
+                  JLabel defenseBar2, JLabel playerImg2) {
+        super(textbutton);
+        this.winner = winner;
+        this.warrior1 = warrior1;
+        this.warrior2 = warrior2;
+        this.warriorsList = warriorsList;
+        this.weaponsList = weaponsList;
+        this.lifeBar2 = lifeBar2;
+        this.powerBar2 = powerBar2;
+        this.agilityBar2 = agilityBar2;
+        this.speedBar2 = speedBar2;
+        this.defenseBar2 = defenseBar2;
+        this.playerImg2 = playerImg2;
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Yes")) { // player wants to play again
             if (winner) { // the player wins
                 // reset the warriors life and sets a random warrior with a random weapon for the bot
                 // save the points of the player
+                System.out.println(warrior2.getName());
                 warrior1.setLife(warrior1.getInitialLife());
                 warrior2.setLife(warrior2.getInitialLife());
                 warrior2 = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
-
-                // set an avaible weapon for the bot warrior
+                System.out.println(warrior2.getName());
                 Query query = new Query();
                 ResultSet rs;
                 rs = query.makeSelect("select * from weapons_available where warrior_id = " + warrior2.getId());
@@ -606,12 +632,30 @@ class Replay extends JDialog implements ActionListener {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+                // we set the bot warrior atributes 1 by 1. Oterwhise it will not work
+                warrior2.setId(warrior2.getId());
+                warrior2.setName(warrior2.getName());
+                warrior2.setAgility(warrior2.getAgility());
+                warrior2.setDefense(warrior2.getDefense());
+                warrior2.setForce(warrior2.getForce());
+                warrior2.setInitialForce(warrior2.getForce());
+                warrior2.setImgUrl(warrior2.getImgUrl());
+                warrior2.setLife(warrior2.getLife());
+                warrior2.setInitialLife(warrior2.getLife());
+                warrior2.setPoints(warrior2.getPoints());
+                warrior2.setRace(warrior2.getRace());
+                warrior2.setSpeed(warrior2.getSpeed());
+                warrior2.setInitialSpeed(warrior2.getInitialSpeed());
+                warrior2.setSpriteUrl(warrior2.getSpriteUrl());
+
                 // we modify the bot warrior force and speed depending on the weapon
                 // we rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
                 warrior2.setForce(warrior2.getForce() + weaponsList.get(warrior2.getWeaponID() - 1).getForce());
                 warrior2.setSpeed(warrior2.getSpeed() + weaponsList.get(warrior2.getWeaponID() - 1).getSpeed());
 
-
+                // Modify the image displayed on the screen of the character
+                ImageIcon img = new ImageIcon(warrior2.getSpriteUrl());
+                playerImg2.setIcon(img);
 
             } else { // bot wins
                 System.out.println("bot wins");
@@ -620,5 +664,4 @@ class Replay extends JDialog implements ActionListener {
             System.exit(0);
         }
     }
-
 }
