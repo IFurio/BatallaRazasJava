@@ -3,10 +3,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        new InitialConfigurations(); // MAKE SURE THESE ARE YOUR CURRENT CREDENTIALS!!!!!!!
+        // ENTER TO THE QUERY CLASS TO MAKE SURE YOU ARE USING YOUR CURRENT CREDENTIALS!!!!!
+        new InitialConfigurations(); // This is used to config the player name
 
     }
 }
@@ -18,10 +23,12 @@ class GameFrame1 extends JFrame implements ActionListener {
     private JButton button1, button2, button3, button4, button5;
     private JScrollPane scrollPane;
     private JTextArea console;
+    private ArrayList<Warrior> warriorsList;
+    private ArrayList<Weapon> weaponsList;
     GameFrame1() {
         setSize(960, 680);
         setTitle("RacesBattle");
-        setLocation(100, 600);
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -45,6 +52,35 @@ class GameFrame1 extends JFrame implements ActionListener {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+        // set an empty warrior for the player. Later the warrior will be chosen
+        player1 = new Warrior(0, "", "", 0, 0, 0, 0, 0, "","", 0);
+
+
+        Query query = new Query();
+        query.warrior_getdata(); // set WarriorContainer class
+        warriorsList = query.getMainWarriorContainer().getWarriors(); // get the warrior list
+        player2 = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
+
+        query.weapon_getdata();// set WeaponContainer class
+        weaponsList = query.getMainWeaponContainer().getWeapons();
+
+        // set an avaible weapon for the bot warrior
+        ResultSet rs;
+        rs = query.makeSelect("select * from weapons_available where warrior_id = " + player2.getId());
+        try {
+            rs.last();
+            int rowCount = rs.getRow();
+            rs.beforeFirst();
+            rs.absolute((int)(Math.random()*rowCount) + 1); // random weapon id from 1 to x
+            player2.setWeaponID(rs.getInt(2));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        // we modify the bot warrior force and speed depending on the weapon
+        // we rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
+        player2.setForce(player2.getForce() + weaponsList.get(player2.getWeaponID() - 1).getForce());
+        player2.setSpeed(player2.getSpeed() + weaponsList.get(player2.getWeaponID() - 1).getSpeed());
+
         lifeBar1 = new JLabel("100%");
         lifeBar1.setBackground(Color.GREEN);
         lifeBar1.setBounds(50, 30, 250, 10);
@@ -64,7 +100,7 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         powerBar2 = new JLabel("Power");
         powerBar2.setBackground(Color.RED);
-        powerBar2.setBounds(390, 50, 250, 10);
+        powerBar2.setBounds(390, 50, 250, 10); // max width 250
         powerBar2.setOpaque(true);
 
         agilityBar1 = new JLabel("Agility");
@@ -109,18 +145,14 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         mainPanel.setLayout(new BorderLayout());
 
-        player2 = new Warrior(1, "Link", "Elf", 40, 4, 2, 7, 7, "M3-Programacio/Images/warrior1.png",19);
-        player1 = new Warrior(2, "Head Hunter", "Human", 50, 5, 3, 6, 6, "M3-Programacio/Images/warrior2.png",20);
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
-        playerImg1 = new JLabel(new ImageIcon(player2.getImgUrl()));
-        playerImg2 = new JLabel(new ImageIcon(player1.getImgUrl()));
+        playerImg1 = new JLabel(); // this will later contain the warrior sprite image
+        playerImg2 = new JLabel(new ImageIcon(player2.getSpriteUrl()));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         imgLabel2.setBounds(0, 300, getWidth(), getHeight());
         imgLabel2.setLocation(300,300);
-        //imgLabel2.setBackground(Color.RED);
-        //imgLabel2.setOpaque(true);
         imgLabel.setBounds(0, -70, getWidth(), getHeight());
 
         mainPanel.add(imgLabel);
@@ -181,17 +213,96 @@ class GameFrame1 extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Choose Character")) {
-            new CharactersWindow(player1);
+        if (e.getActionCommand().equals("Choose Character")) { // click to choose character button
+            new CharactersWindow(player1, warriorsList, playerImg1);
         }
-        else if (e.getActionCommand().equals("Choose Weapon")) {
-            System.out.println("Choose weapon");
+        else if (e.getActionCommand().equals("Choose Weapon")) { // click to choose weapon button
+            if (player1.getName().equals("")) {
+                JOptionPane.showMessageDialog(null, "Choose a character first!!!");
+            }else {
+                new WeaponsWindow(player1, weaponsList);
+            }
         }
-        else if (e.getActionCommand().equals("Ranking")) {
+        else if (e.getActionCommand().equals("Ranking")) { // click to ranking button
             System.out.println("Ranking");
         }
-        else if (e.getActionCommand().equals("Fight")) {
+        else if (e.getActionCommand().equals("Fight")) { // click fight button
             System.out.println("Fight");
+            button4.setEnabled(false);      //Set Enable to false so the player cant click it until the turn ends
+            if (player1.getLife() > 0 && player2.getLife() > 0 && player1.getWeaponID() != 0 && player2.getWeaponID() != 0) {
+                if (player1.getDealer() == 0 && player2.getDealer() == 0) { //If it get clicked for the first time
+                    if (player1.getSpeed() >= player2.getSpeed()) {          //Set the attack order
+                        player1.setDealer(1);                                //The player will attack first
+                    } else {
+                        player2.setDealer(2);                                //The BOT attack first
+                    }
+                }
+                //Reset Stats
+                player1.setDmgAttack(0);
+                player2.setDmgAttack(0);
+                player1.setDmgReceived(0);
+                player2.setDmgReceived(0);
+                if (player1.getDealer() == 1) {                     //If its Player1 turn
+                    console.setText(console.getText() + "\n" + player1.getName()+"s turn");
+                    player1.setDmgAttack(player1.doAtack());
+                    if (player1.getDmgAttack() == 0) {              //Attack failed
+                        console.setText(console.getText() + "\nAttack failed.");
+                    } else {                                        //Attack not failed
+                        player2.doDefense(player1.getDmgAttack());
+                        if (player2.getDmgReceived() == 0) {        //If it dodge the attack (if DmgReceived isnt 0 it didnt dodge it)
+                            console.setText(console.getText() + "\n" + player2.getName() + " dodged the attack.");
+                        } else {
+                            console.setText(console.getText() + "\n" + player2.getName() + " has received " + player2.getDmgReceived() + " of damage.");
+                        }
+                    }
+                    if (player1.getSpeed() <= player2.getSpeed()) {          //If dealer speed is equal or less than the opponent, it cant attack again
+                        player1.setDealer(0);
+                        player2.setDealer(2);
+                    } else {                                                //If it has more speed
+                        Random r = new Random();
+                        int ran = r.nextInt(100) + 1;
+                        if ((player1.getSpeed() - player2.getSpeed()) * 10 < ran) {     //It can attack again
+                            player1.setDealer(0);
+                            player2.setDealer(2);
+                        }
+                    }
+                } else if (player2.getDealer() == 2) {               //If its Player2 turn
+                    console.setText(console.getText() + "\n" + player2.getName()+"s turn");
+                    player2.setDmgAttack(player2.doAtack());
+                    if (player2.getDmgAttack() == 0) {               //Attack failed
+                        console.setText(console.getText() + "\nAttack failed.");
+                    } else {                                        //Attack not failed
+                        player1.doDefense(player2.getDmgAttack());
+                        if (player1.getDmgReceived() == 0) {        //If it dodge the attack (if DmgReceived isnt 0 it didnt dodge it)
+                            console.setText(console.getText() + "\n" + player1.getName() + " dodged the attack.");
+                        } else {
+                            console.setText(console.getText() + "\n" + player1.getName() + " has received " + player1.getDmgReceived() + " of damage.");
+                        }
+                    }
+                    if (player2.getSpeed() <= player1.getSpeed()) {          //If dealer speed is equal or less than the opponent, it cant attack again
+                        player2.setDealer(0);
+                        player1.setDealer(1);
+                    } else {                                                 //If it has more speed
+                        Random r = new Random();
+                        int ran = r.nextInt(100) + 1;
+                        if ((player2.getSpeed() - player1.getSpeed()) * 10 < ran) {     //It can attack again
+                            player2.setDealer(0);
+                            player1.setDealer(1);
+                        }
+                    }
+                }
+                console.setText(console.getText() + "\n" + player1.getName() + "s HP: " + player1.getLife());
+                console.setText(console.getText() + "\n" + player2.getName() + "s HP: " + player2.getLife());
+
+                //When there is someone with no HP
+                if (player1.getLife() <= 0) {
+                    console.setText(console.getText() + "The player lose, " + player2.getName() + " wins.");
+                } else if (player2.getLife() <= 0) {
+                    console.setText(console.getText() + "Bot lose, player with " + player1.getName() + " wins");
+                }
+
+            }
+            button4.setEnabled(true);
         }
         else if (e.getActionCommand().equals("Clear Console")) {
             System.out.println("Clear Console");
@@ -199,142 +310,147 @@ class GameFrame1 extends JFrame implements ActionListener {
         }
     }
 }
-class CharactersWindow extends JFrame implements ActionListener {
+class CharactersWindow extends JDialog {
     private JPanel mainPanel;
-    private JButton warrior1, warrior2, warrior3, warrior4, warrior5, warrior6, warrior7, warrior8, warrior9;
-    private Warrior pj1;
+    private Warrior player1;
+    private ArrayList<Warrior> warriorsList;
+    private JLabel playerImg1;
 
-    CharactersWindow(Warrior pj1) {
-        this.pj1 = pj1;
+    CharactersWindow(Warrior player1, ArrayList<Warrior> warriorsList, JLabel playerImg1) {
+        this.player1 = player1;
+        this.warriorsList = warriorsList;
+        this.playerImg1 = playerImg1;
         setSize(960, 680);
         setTitle("Select Character");
-        setLocation(100, 600);
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setModal(true);
 
         mainPanel = new JPanel();
 
-        warrior1 = new JButton(new ImageIcon("M3-Programacio/Images/warrior11.png"));
-        warrior2 = new JButton(new ImageIcon("M3-Programacio/Images/warrior21.jpg"));
-        warrior3 = new JButton(new ImageIcon("M3-Programacio/Images/warrior31.png"));
-        warrior4 = new JButton(new ImageIcon("M3-Programacio/Images/warrior41.png"));
-        warrior5 = new JButton(new ImageIcon("M3-Programacio/Images/warrior51.jpg"));
-        warrior6 = new JButton(new ImageIcon("M3-Programacio/Images/warrior61.jpg"));
-        warrior7 = new JButton(new ImageIcon("M3-Programacio/Images/warrior71.png"));
-        warrior8 = new JButton(new ImageIcon("M3-Programacio/Images/warrior81.jpg"));
-        warrior9 = new JButton(new ImageIcon("M3-Programacio/Images/warrior91.jpg"));
+        int numRows = warriorsList.size() / 3; // the number of rows is calculated according to the number of warriors
+        if (warriorsList.size() % 3 != 0) {
+            numRows++;
+        }
+
+        mainPanel.setLayout(new GridLayout(numRows,3));
+
+        for (int i = 0; i<warriorsList.size(); i++){ // we create a button for each of the warriors on the list
+            WarriorButon warriorButon;
+            Warrior currentWarrior = warriorsList.get(i);
+            warriorButon = new WarriorButon(currentWarrior, player1, playerImg1, new ImageIcon(currentWarrior.getImgUrl()));
+            mainPanel.add(warriorButon);
+            warriorButon.addActionListener(warriorButon); // this will treat the action of the button
+        }
+
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
-
-        warrior1.setText("Legolas");
-        warrior2.setText("Isildur");
-        warrior3.setText("Eru");
-        warrior4.setText("Arthur Pendragon");
-        warrior5.setText("Siegfried");
-        warrior6.setText("Sir William Wallace");
-        warrior7.setText("Brokk");
-        warrior8.setText("Guldrak");
-        warrior9.setText("Krumgrom");
-
-        mainPanel.setLayout(new GridLayout(3,3));
-
-        mainPanel.add(warrior1);
-        mainPanel.add(warrior2);
-        mainPanel.add(warrior3);
-        mainPanel.add(warrior4);
-        mainPanel.add(warrior5);
-        mainPanel.add(warrior6);
-        mainPanel.add(warrior7);
-        mainPanel.add(warrior8);
-        mainPanel.add(warrior9);
 
         add(mainPanel);
 
-        warrior1.addActionListener(this);
-        warrior2.addActionListener(this);
-        warrior3.addActionListener(this);
-        warrior4.addActionListener(this);
-        warrior5.addActionListener(this);
-        warrior6.addActionListener(this);
-        warrior7.addActionListener(this);
-        warrior8.addActionListener(this);
-        warrior9.addActionListener(this);
-
         setVisible(true);
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("Selecciono personaje");
-        if (e.getActionCommand().equals("Legolas")) {
-            System.out.println("Click on warrior1, legolas");
-
-        }
-        else if (e.getActionCommand().equals("Isildur")) {
-            System.out.println("Click on warrior2, Isildur");
-        }
-        else if (e.getActionCommand().equals("Eru")) {
-            System.out.println("Click on warrior3, Eru");
-        }
-        else if (e.getActionCommand().equals("Arthur Pendragon")) {
-            System.out.println("Click on warrior4, Arthur Pendragon");
-        }
-        else if (e.getActionCommand().equals("Siegfried")) {
-            System.out.println("Click on warrior5, Siegfried");
-        }
-        else if (e.getActionCommand().equals("Sir William Wallace")) {
-            System.out.println("Click on warrior6, Sir William Wallace");
-        }
-        else if (e.getActionCommand().equals("Brokk")) {
-            System.out.println("Click on warrior7, Brokk");
-        }
-        else if (e.getActionCommand().equals("Guldrak")) {
-            System.out.println("Click on warrior8, Guldrak");
-        }
-        else if (e.getActionCommand().equals("Krumgrom")) {
-            System.out.println("Click on warrior9, Krumgrom");
-        }
     }
 }
+class WarriorButon extends JButton implements ActionListener {
+    private Warrior warrior, player1;
+    private JLabel playerImg1;
 
-class Ranking extends JFrame {
-    private JPanel panel_principal, panel1, panel2;
-    private JTextArea ranking;
-    private JLabel title;
+    WarriorButon(Warrior warrior, Warrior player1, JLabel playerImg1, ImageIcon img) {
+        super(img);
+        this.warrior = warrior;
+        this.player1 = player1;
+        this.playerImg1 = playerImg1;
+    }
 
-    public Ranking() {
-        panel_principal = new JPanel();
-        panel1 = new JPanel();
-        panel2 = new JPanel();
-        panel_principal.setLayout(new BoxLayout(panel_principal, BoxLayout.Y_AXIS));
-        ranking = new JTextArea();
-        title = new JLabel("<html><u>Ranking</u></html>");
-        title.setFont(new Font(Font.MONOSPACED, Font.ITALIC + Font.BOLD, 20));
-        ranking.setOpaque(false);
-        Query query = new Query();
-        ResultSet rs;
-        rs = query.makeSelect("select * from players order by global_points desc");
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // set the clicked warrior to the player1 warrior
+        player1.setId(warrior.getId());
+        player1.setName(warrior.getName());
+        player1.setAgility(warrior.getAgility());
+        player1.setDefense(warrior.getDefense());
+        player1.setForce(warrior.getForce());
+        player1.setInitialForce(warrior.getForce());
+        player1.setImgUrl(warrior.getImgUrl());
+        player1.setLife(warrior.getLife());
+        player1.setInitialLife(warrior.getLife());
+        player1.setPoints(warrior.getPoints());
+        player1.setRace(warrior.getRace());
+        player1.setSpeed(warrior.getSpeed());
+        player1.setInitialSpeed(warrior.getInitialSpeed());
+        player1.setSpriteUrl(warrior.getSpriteUrl());
+        ImageIcon img = new ImageIcon(warrior.getSpriteUrl());
+        playerImg1.setIcon(img);
+        // This prevents a weapon from being chosen for the wrong warrior when changing it back
+        player1.setWeaponID(0);
 
-        try {
-            int cont = 0;
-            String data = "";
-            while (rs.next() && cont < 10) {
-                data = "ID: " + rs.getInt(1) + " Name: " + rs.getString(2) + " Points: " + rs.getInt(3) + "\n\n";
-                ranking.setText(ranking.getText() + data);
-                cont++;
-            }
-            query.closeConnections();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            System.out.println("Conexion no creada correctamente");
-        }
-        panel1.add(title);
-        panel2.add(ranking);
-        panel_principal.add(panel1);
-        panel_principal.add(panel2);
-        add(panel_principal, BorderLayout.CENTER);
-        setTitle("Ranking");
-        setSize(400, 400);
+    }
+
+}
+class WeaponsWindow extends JDialog {
+    private JPanel mainPanel;
+    private Warrior player1;
+    private ArrayList<Weapon> weaponsList;
+    WeaponsWindow(Warrior player1, ArrayList<Weapon> weaponsList) {
+        setSize(960, 680);
+        setTitle("Select Weapon");
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setModal(true);
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
+
+        mainPanel = new JPanel();
+
+        int numRows = weaponsList.size() / 3; // the number of rows is calculated according to the number of weapons
+        if (weaponsList.size() % 3 != 0) {
+            numRows++;
+        }
+
+        mainPanel.setLayout(new GridLayout(numRows, 3));
+
+        // We only need to show the weapons avaible for the current warrior so first of all we make a query to select
+        // all the weapons needed
+        Query query = new Query();
+        ResultSet rs;
+        rs = query.makeSelect("select * from weapons_available where warrior_id = " + player1.getId());
+        try {
+            while (rs.next()) {
+                Weapon currentWeapon;
+                WeaponButton weaponButton;
+                // We rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
+                // The weaponButton constructor have 1 new ImageIcon because this will be displayed on the button
+                currentWeapon = weaponsList.get(rs.getInt(2) - 1);
+                weaponButton = new WeaponButton(player1, new ImageIcon(currentWeapon.getImage()), currentWeapon);
+                mainPanel.add(weaponButton);
+                weaponButton.addActionListener(weaponButton); // this will treat the action of the button
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        add(mainPanel);
+
         setVisible(true);
+    }
+}
+class WeaponButton extends JButton implements ActionListener {
+    private Warrior player1;
+    private Weapon player1Weapon;
+
+    WeaponButton(Warrior player1, ImageIcon weaponImg, Weapon player1Weapon) {
+        super(weaponImg);
+        this.player1 = player1;
+        this.player1Weapon = player1Weapon;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        player1.setWeaponID(player1Weapon.getId());
+        // Set the force and the speed to the initial force and intial speed prevents to sum weapons damages and speed
+        player1.setForce(player1.getInitialForce());
+        player1.setSpeed(player1.getInitialSpeed());
+        player1.setForce(player1.getForce() + player1Weapon.getForce());
+        player1.setSpeed(player1.getSpeed() + player1Weapon.getSpeed());
     }
 }
