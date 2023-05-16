@@ -25,7 +25,9 @@ class GameFrame1 extends JFrame implements ActionListener {
     private JTextArea console;
     private ArrayList<Warrior> warriorsList;
     private ArrayList<Weapon> weaponsList;
-    GameFrame1() {
+    private String userName;
+    GameFrame1(String username) {
+        this.userName = username;
         setSize(960, 680);
         setTitle("RacesBattle");
         setLocation(400, 100);
@@ -85,33 +87,39 @@ class GameFrame1 extends JFrame implements ActionListener {
         lifeBar1.setBackground(Color.GREEN);
         lifeBar1.setBounds(50, 30, 250, 10);
         lifeBar1.setOpaque(true);
-        lifeBar1.setHorizontalAlignment(SwingConstants.RIGHT);
+        //lifeBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         lifeBar2 = new JLabel("100%");
         lifeBar2.setBackground(Color.GREEN);
-        lifeBar2.setBounds(390, 30, 250, 10);
+        int lifePercentage = 100 * player2.getLife() / player2.getInitialLife();
+        int calLifeBarWidth = 250 * lifePercentage / 100;
+
+        lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
         lifeBar2.setOpaque(true);
 
         powerBar1 = new JLabel("Power");
         powerBar1.setBackground(Color.RED);
         powerBar1.setBounds(50, 50, 250, 10);
         powerBar1.setOpaque(true);
-        powerBar1.setHorizontalAlignment(SwingConstants.RIGHT);
+        //powerBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         powerBar2 = new JLabel("Power");
         powerBar2.setBackground(Color.RED);
-        powerBar2.setBounds(390, 50, 250, 10); // max width 250
+        int calPowerBarWidth = 250 * player2.getForce() / 11; // width calculation for the powerBar
+        powerBar2.setBounds(390, 50, calPowerBarWidth, 10); // max width 250
+
         powerBar2.setOpaque(true);
 
         agilityBar1 = new JLabel("Agility");
         agilityBar1.setBackground(Color.YELLOW);
         agilityBar1.setBounds(50, 70, 250, 10);
         agilityBar1.setOpaque(true);
-        agilityBar1.setHorizontalAlignment(SwingConstants.RIGHT);
+        //agilityBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         agilityBar2 = new JLabel("Agility");
         agilityBar2.setBackground(Color.YELLOW);
-        agilityBar2.setBounds(390, 70, 250, 10);
+        int calAgilityBarWidth = 250 * player2.getAgility() / 7; // width calculation for the agilityBar
+        agilityBar2.setBounds(390, 70, calAgilityBarWidth, 10);
         agilityBar2.setOpaque(true);
 
 
@@ -119,22 +127,24 @@ class GameFrame1 extends JFrame implements ActionListener {
         speedBar1.setBackground(Color.CYAN);
         speedBar1.setBounds(50, 90, 250, 10);
         speedBar1.setOpaque(true);
-        speedBar1.setHorizontalAlignment(SwingConstants.RIGHT);
+        //speedBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         speedBar2 = new JLabel("Speed");
         speedBar2.setBackground(Color.CYAN);
-        speedBar2.setBounds(390, 90, 250, 10);
+        int calSpeedBarWidth = 250 * player2.getSpeed() / 12; // width calculation for the speedBar
+        speedBar2.setBounds(390, 90, calSpeedBarWidth, 10);
         speedBar2.setOpaque(true);
 
         defenseBar1 = new JLabel("Defense");
         defenseBar1.setBackground(Color.WHITE);
         defenseBar1.setBounds(50, 110, 250, 10);
         defenseBar1.setOpaque(true);
-        defenseBar1.setHorizontalAlignment(SwingConstants.RIGHT);
+        //defenseBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         defenseBar2 = new JLabel("Defense");
         defenseBar2.setBackground(Color.WHITE);
-        defenseBar2.setBounds(390, 110, 250, 10);
+        int calDefenseBarWidth = 250 * player2.getDefense() / 4; // width calculation for the defenseBar
+        defenseBar2.setBounds(390, 110, calDefenseBarWidth, 10);
         defenseBar2.setOpaque(true);
 
         button1.setBackground(Color.YELLOW);
@@ -220,7 +230,7 @@ class GameFrame1 extends JFrame implements ActionListener {
             if (player1.getName().equals("")) {
                 JOptionPane.showMessageDialog(null, "Choose a character first!!!");
             }else {
-                new WeaponsWindow(player1, weaponsList);
+                new WeaponsWindow(player1, weaponsList, lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1);
             }
         }
         else if (e.getActionCommand().equals("Ranking")) { // click to ranking button
@@ -253,6 +263,11 @@ class GameFrame1 extends JFrame implements ActionListener {
                             console.setText(console.getText() + "\n" + player2.getName() + " dodged the attack.");
                         } else {
                             console.setText(console.getText() + "\n" + player2.getName() + " has received " + player2.getDmgReceived() + " of damage.");
+                            // Recalculate lifebar of player2
+                            int lifePercentage = 100 * player2.getLife() / player2.getInitialLife();
+                            int calLifeBarWidth = 250 * lifePercentage / 100;
+                            lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+                            lifeBar2.setText(lifePercentage + "%");
                         }
                     }
                     if (player1.getSpeed() <= player2.getSpeed()) {          //If dealer speed is equal or less than the opponent, it cant attack again
@@ -277,6 +292,11 @@ class GameFrame1 extends JFrame implements ActionListener {
                             console.setText(console.getText() + "\n" + player1.getName() + " dodged the attack.");
                         } else {
                             console.setText(console.getText() + "\n" + player1.getName() + " has received " + player1.getDmgReceived() + " of damage.");
+                            // Recalculate lifebar of player1
+                            int lifePercentage = 100 * player1.getLife() / player1.getInitialLife();
+                            int calLifeBarWidth = 250 * lifePercentage / 100;
+                            lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
+                            lifeBar1.setText(lifePercentage + "%");
                         }
                     }
                     if (player2.getSpeed() <= player1.getSpeed()) {          //If dealer speed is equal or less than the opponent, it cant attack again
@@ -296,9 +316,9 @@ class GameFrame1 extends JFrame implements ActionListener {
 
                 //When there is someone with no HP
                 if (player1.getLife() <= 0) {
-                    console.setText(console.getText() + "The player lose, " + player2.getName() + " wins.");
+                    console.setText(console.getText() + "\nThe player lose, " + player2.getName() + " wins.");
                 } else if (player2.getLife() <= 0) {
-                    console.setText(console.getText() + "Bot lose, player with " + player1.getName() + " wins");
+                    console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
                 }
 
             }
@@ -389,9 +409,7 @@ class WarriorButon extends JButton implements ActionListener {
 }
 class WeaponsWindow extends JDialog {
     private JPanel mainPanel;
-    private Warrior player1;
-    private ArrayList<Weapon> weaponsList;
-    WeaponsWindow(Warrior player1, ArrayList<Weapon> weaponsList) {
+    WeaponsWindow(Warrior player1, ArrayList<Weapon> weaponsList, JLabel lifeBar1, JLabel powerBar1, JLabel agilityBar1, JLabel speedBar1, JLabel defenseBar1) {
         setSize(650, 680);
         setTitle("Select Weapon");
         setLocation(400, 100);
@@ -421,7 +439,8 @@ class WeaponsWindow extends JDialog {
                 // We rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
                 // The weaponButton constructor have 1 new ImageIcon because this will be displayed on the button
                 currentWeapon = weaponsList.get(rs.getInt(2) - 1);
-                weaponButton = new WeaponButton(player1, new ImageIcon(currentWeapon.getImage()), currentWeapon);
+                weaponButton = new WeaponButton(player1, new ImageIcon(currentWeapon.getImage()), currentWeapon,
+                lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1);
                 mainPanel.add(weaponButton);
                 weaponButton.addActionListener(weaponButton); // this will treat the action of the button
             }
@@ -438,11 +457,17 @@ class WeaponsWindow extends JDialog {
 class WeaponButton extends JButton implements ActionListener {
     private Warrior player1;
     private Weapon player1Weapon;
+    private JLabel lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1;
 
-    WeaponButton(Warrior player1, ImageIcon weaponImg, Weapon player1Weapon) {
+    WeaponButton(Warrior player1, ImageIcon weaponImg, Weapon player1Weapon, JLabel lifeBar1, JLabel powerBar1, JLabel agilityBar1, JLabel speedBar1, JLabel defenseBar1) {
         super(weaponImg);
         this.player1 = player1;
         this.player1Weapon = player1Weapon;
+        this.lifeBar1 = lifeBar1;
+        this.powerBar1 = powerBar1;
+        this.agilityBar1 = agilityBar1;
+        this.speedBar1 = speedBar1;
+        this.defenseBar1 = defenseBar1;
     }
 
     @Override
@@ -453,6 +478,21 @@ class WeaponButton extends JButton implements ActionListener {
         player1.setSpeed(player1.getInitialSpeed());
         player1.setForce(player1.getForce() + player1Weapon.getForce());
         player1.setSpeed(player1.getSpeed() + player1Weapon.getSpeed());
+
+        // LifeBar calculation
+        int lifePercentage = 100 * player1.getLife() / player1.getInitialLife();
+        int calLifeBarWidth = 250 * lifePercentage / 100;
+
+        int calPowerBarWidth = 250 * player1.getForce() / 11; // PowerBar calculation
+        int calAgilityBarWidth = 250 * player1.getAgility() / 7; // width calculation for the agilityBar
+        int calSpeedBarWidth = 250 * player1.getSpeed() / 12; // width calculation for the speedBar
+        int calDefenseBarWidth = 250 * player1.getDefense() / 4; // width calculation for the defenseBar
+
+        lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
+        powerBar1.setBounds(50, 50, calPowerBarWidth, 10);
+        agilityBar1.setBounds(50, 70, calAgilityBarWidth, 10);
+        speedBar1.setBounds(50, 90, calSpeedBarWidth, 10);
+        defenseBar1.setBounds(50, 110, calDefenseBarWidth, 10);
     }
 }
 class Ranking extends JFrame {
