@@ -8,10 +8,13 @@ public class Warrior {
     private String name;
     private String race;
     private int life;
+    private int initialLife;
     private int force;
+    private int initialForce;
     private int defense;
     private int agility;
     private int speed;
+    private int initialSpeed;
     private String imgUrl;
     private String spriteUrl;
     private int points;
@@ -22,81 +25,53 @@ public class Warrior {
         this.name = name;
         this.race = race;
         this.life = life;
+        this.initialLife = life;
         this.force = force;
+        this.initialForce = force;
         this.defense = defense;
         this.agility = agility;
         this.speed = speed;
+        this.initialSpeed = speed;
         this.imgUrl = imgUrl;
         this.spriteUrl = spriteUrl;
         this.points = points;
     }
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getRace() {
-        return race;
-    }
-    public void setRace(String race) {
-        this.race = race;
-    }
-    public int getLife() {
-        return life;
-    }
-    public void setLife(int life) {
-        this.life = life;
-    }
-    public int getForce() {
-        return force;
-    }
-    public void setForce(int force) {
-        this.force = force;
-    }
-    public int getDefense() {
-        return defense;
-    }
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-    public int getAgility() {
-        return agility;
-    }
-    public void setAgility(int agility) {
-        this.agility = agility;
-    }
-    public int getSpeed() {
-        return speed;
-    }
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-    public String getImgUrl() {
-        return imgUrl;
-    }
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-    public String getSpriteUrl() {
-        return spriteUrl;
-    }
-    public void setSpriteUrl(String spriteUrl) {
-        this.spriteUrl = spriteUrl;
-    }
-    public int getPoints() {
-        return points;
-    }
-    public void setPoints(int points) {
-        this.points = points;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getRace() { return race; }
+    public void setRace(String race) { this.race = race; }
+    public int getLife() { return life; }
+    public void setLife(int life) { this.life = life; }
+    public int getForce() { return force; }
+    public void setForce(int force) { this.force = force; }
+    public int getDefense() { return defense; }
+    public void setDefense(int defense) { this.defense = defense; }
+    public int getAgility() { return agility; }
+    public void setAgility(int agility) { this.agility = agility; }
+    public int getSpeed() { return speed; }
+    public void setSpeed(int speed) { this.speed = speed; }
+    public String getImgUrl() { return imgUrl; }
+    public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
+    public String getSpriteUrl() { return spriteUrl; }
+    public void setSpriteUrl(String spriteUrl) { this.spriteUrl = spriteUrl; }
+    public int getPoints() { return points; }
+    public void setPoints(int points) { this.points = points; }
+
+    public int getInitialLife() { return initialLife; }
+
+    public void setInitialLife(int initialLife) { this.initialLife = initialLife; }
+
+    public int getInitialForce() { return initialForce; }
+
+    public void setInitialForce(int initialForce) { this.initialForce = initialForce; }
+
+    public int getInitialSpeed() { return initialSpeed; }
+
+    public void setInitialSpeed(int initialSpeed) { this.initialSpeed = initialSpeed; }
+
     public int getDealer(){return dealer;}
     public void setDealer(int d){this.dealer = d;}
     public void setDmgAttack(int dmg){this.dmgAttack = dmg;}

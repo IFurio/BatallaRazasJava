@@ -63,6 +63,8 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         query.weapon_getdata();// set WeaponContainer class
         weaponsList = query.getMainWeaponContainer().getWeapons();
+
+        // set an avaible weapon for the bot warrior
         ResultSet rs;
         rs = query.makeSelect("select * from weapons_available where warrior_id = " + player2.getId());
         try {
@@ -71,7 +73,6 @@ class GameFrame1 extends JFrame implements ActionListener {
             rs.beforeFirst();
             rs.absolute((int)(Math.random()*rowCount) + 1); // random weapon id from 1 to x
             player2.setWeaponID(rs.getInt(2));
-            query.closeConnections();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -219,7 +220,7 @@ class GameFrame1 extends JFrame implements ActionListener {
             if (player1.getName().equals("")) {
                 JOptionPane.showMessageDialog(null, "Choose a character first!!!");
             }else {
-                new WeaponsWindow();
+                new WeaponsWindow(player1, weaponsList);
             }
         }
         else if (e.getActionCommand().equals("Ranking")) { // click to ranking button
@@ -309,14 +310,14 @@ class GameFrame1 extends JFrame implements ActionListener {
         }
     }
 }
-class CharactersWindow extends JFrame {
+class CharactersWindow extends JDialog {
     private JPanel mainPanel;
-    private Warrior pj1;
+    private Warrior player1;
     private ArrayList<Warrior> warriorsList;
     private JLabel playerImg1;
 
-    CharactersWindow(Warrior pj1, ArrayList<Warrior> warriorsList, JLabel playerImg1) {
-        this.pj1 = pj1;
+    CharactersWindow(Warrior player1, ArrayList<Warrior> warriorsList, JLabel playerImg1) {
+        this.player1 = player1;
         this.warriorsList = warriorsList;
         this.playerImg1 = playerImg1;
         setSize(960, 680);
@@ -324,6 +325,7 @@ class CharactersWindow extends JFrame {
         setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setModal(true);
 
         mainPanel = new JPanel();
 
@@ -337,7 +339,7 @@ class CharactersWindow extends JFrame {
         for (int i = 0; i<warriorsList.size(); i++){ // we create a button for each of the warriors on the list
             WarriorButon warriorButon;
             Warrior currentWarrior = warriorsList.get(i);
-            warriorButon = new WarriorButon(currentWarrior, pj1, playerImg1, new ImageIcon(currentWarrior.getImgUrl()));
+            warriorButon = new WarriorButon(currentWarrior, player1, playerImg1, new ImageIcon(currentWarrior.getImgUrl()));
             mainPanel.add(warriorButon);
             warriorButon.addActionListener(warriorButon); // this will treat the action of the button
         }
@@ -350,35 +352,105 @@ class CharactersWindow extends JFrame {
     }
 }
 class WarriorButon extends JButton implements ActionListener {
-    private Warrior warrior, pj1;
+    private Warrior warrior, player1;
     private JLabel playerImg1;
 
-    WarriorButon(Warrior warrior, Warrior pj1, JLabel playerImg1, ImageIcon img) {
+    WarriorButon(Warrior warrior, Warrior player1, JLabel playerImg1, ImageIcon img) {
         super(img);
         this.warrior = warrior;
-        this.pj1 = pj1;
+        this.player1 = player1;
         this.playerImg1 = playerImg1;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        pj1 = warrior; // set the clicked warrior to the player1 warrior
+        // set the clicked warrior to the player1 warrior
+        player1.setId(warrior.getId());
+        player1.setName(warrior.getName());
+        player1.setAgility(warrior.getAgility());
+        player1.setDefense(warrior.getDefense());
+        player1.setForce(warrior.getForce());
+        player1.setInitialForce(warrior.getForce());
+        player1.setImgUrl(warrior.getImgUrl());
+        player1.setLife(warrior.getLife());
+        player1.setInitialLife(warrior.getLife());
+        player1.setPoints(warrior.getPoints());
+        player1.setRace(warrior.getRace());
+        player1.setSpeed(warrior.getSpeed());
+        player1.setInitialSpeed(warrior.getInitialSpeed());
+        player1.setSpriteUrl(warrior.getSpriteUrl());
         ImageIcon img = new ImageIcon(warrior.getSpriteUrl());
         playerImg1.setIcon(img);
-        pj1.setWeaponID(0);
+        // This prevents a weapon from being chosen for the wrong warrior when changing it back
+        player1.setWeaponID(0);
+
     }
+
 }
-class WeaponsWindow extends JFrame {
-    WeaponsWindow() {
+class WeaponsWindow extends JDialog {
+    private JPanel mainPanel;
+    private Warrior player1;
+    private ArrayList<Weapon> weaponsList;
+    WeaponsWindow(Warrior player1, ArrayList<Weapon> weaponsList) {
         setSize(960, 680);
-        setTitle("Select Character");
-        setLocation(100, 600);
+        setTitle("Select Weapon");
+        setLocation(400, 100);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setModal(true);
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
+        mainPanel = new JPanel();
 
+        int numRows = weaponsList.size() / 3; // the number of rows is calculated according to the number of weapons
+        if (weaponsList.size() % 3 != 0) {
+            numRows++;
+        }
 
+        mainPanel.setLayout(new GridLayout(numRows, 3));
+
+        // We only need to show the weapons avaible for the current warrior so first of all we make a query to select
+        // all the weapons needed
+        Query query = new Query();
+        ResultSet rs;
+        rs = query.makeSelect("select * from weapons_available where warrior_id = " + player1.getId());
+        try {
+            while (rs.next()) {
+                Weapon currentWeapon;
+                WeaponButton weaponButton;
+                // We rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
+                // The weaponButton constructor have 1 new ImageIcon because this will be displayed on the button
+                currentWeapon = weaponsList.get(rs.getInt(2) - 1);
+                weaponButton = new WeaponButton(player1, new ImageIcon(currentWeapon.getImage()), currentWeapon);
+                mainPanel.add(weaponButton);
+                weaponButton.addActionListener(weaponButton); // this will treat the action of the button
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        add(mainPanel);
 
         setVisible(true);
+    }
+}
+class WeaponButton extends JButton implements ActionListener {
+    private Warrior player1;
+    private Weapon player1Weapon;
+
+    WeaponButton(Warrior player1, ImageIcon weaponImg, Weapon player1Weapon) {
+        super(weaponImg);
+        this.player1 = player1;
+        this.player1Weapon = player1Weapon;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        player1.setWeaponID(player1Weapon.getId());
+        // Set the force and the speed to the initial force and intial speed prevents to sum weapons damages and speed
+        player1.setForce(player1.getInitialForce());
+        player1.setSpeed(player1.getInitialSpeed());
+        player1.setForce(player1.getForce() + player1Weapon.getForce());
+        player1.setSpeed(player1.getSpeed() + player1Weapon.getSpeed());
     }
 }
