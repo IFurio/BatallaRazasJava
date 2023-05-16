@@ -5,11 +5,11 @@ import mysql.connector
 #Connect to DB and collect information
 def collectData():
     config = {
-            'host':'ip', 
-            'port':'port',
+            'host':'127.0.0.1', 
+            'port':'3306',
             'user':'user', 
             'password':'passwd', 
-            'database':'db'}
+            'database':'batalla_races'}
     try:
         conexion = mysql.connector.connect(**config)
         cursor = conexion.cursor()

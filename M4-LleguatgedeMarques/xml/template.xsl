@@ -6,6 +6,7 @@
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
+                <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
                 <link href="./battle.css" rel="stylesheet"/>
                 <title>Battle Results</title>
            </head>
@@ -16,11 +17,11 @@
                         <div class="portaits">
                             <xsl:element name="img">
                                 <xsl:attribute name="class">photo</xsl:attribute>
-                                <xsl:attribute name="src">../Images/warrior<xsl:value-of select="warrior_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../../M3-Programacio/Images/warrior<xsl:value-of select="warrior_id"/>1.png</xsl:attribute>
                             </xsl:element>
                             <xsl:element name="img">
                                 <xsl:attribute name="class">photo</xsl:attribute>
-                                <xsl:attribute name="src">../Images/warrior<xsl:value-of select="opponent_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../../M3-Programacio/Images/warrior<xsl:value-of select="opponent_id"/>1.png</xsl:attribute>
                             </xsl:element>
                         </div>
                         <table>
@@ -32,11 +33,11 @@
                             <tr>
                               <td>Players ID</td>
                               <td><xsl:value-of select="player_id"/></td>
-                              <td></td>
+                              <td>🤖</td>
                             </tr>
                             <tr>
                               <td>Warrior ID</td>
-                              <td><xsl:value-of select="warrior"/></td>
+                              <td><xsl:value-of select="warrior_id"/></td>
                               <td><xsl:value-of select="opponent_id"/></td>
                             </tr>
                             <tr>
@@ -63,11 +64,11 @@
                           <div class="portaits">
                             <xsl:element name="img">
                                 <xsl:attribute name="class">weapon</xsl:attribute>
-                                <xsl:attribute name="src">../Images/weapon<xsl:value-of select="warrior_weapon_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../../M3-Programacio/Images/weapon<xsl:value-of select="warrior_weapon_id"/>1.png</xsl:attribute>
                             </xsl:element>
                             <xsl:element name="img">
                                 <xsl:attribute name="class">weapon</xsl:attribute>
-                                <xsl:attribute name="src">../Images/weapon<xsl:value-of select="opponent_weapon_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../../M3-Programacio/Images/weapon<xsl:value-of select="opponent_weapon_id"/>1.png</xsl:attribute>
                             </xsl:element>
                           </div>
                     </div>
