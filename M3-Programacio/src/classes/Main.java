@@ -317,8 +317,10 @@ class GameFrame1 extends JFrame implements ActionListener {
                 //When there is someone with no HP
                 if (player1.getLife() <= 0) {
                     console.setText(console.getText() + "\nThe player lose, " + player2.getName() + " wins.");
+                    new Replay(false, player1, player2, warriorsList, weaponsList);
                 } else if (player2.getLife() <= 0) {
                     console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
+                    new Replay(true, player1, player2, warriorsList, weaponsList);
                 }
 
             }
@@ -537,4 +539,86 @@ class Ranking extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
     }
+}
+class Replay extends JDialog implements ActionListener {
+    private JPanel mainPanel, subPanel;
+    private JLabel label;
+    private JButton buttonYes, buttonNo;
+    private Boolean winner;
+    private Warrior warrior1, warrior2;
+    private ArrayList<Warrior> warriorsList;
+    private ArrayList<Weapon> weaponsList;
+
+    Replay (Boolean winner, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList, ArrayList<Weapon> weaponsList) {
+        this.winner = winner;
+        this.warrior1 = warrior1;
+        this.warrior2 = warrior2;
+        this.warriorsList = warriorsList;
+        this.weaponsList = weaponsList;
+        setSize(300, 200);
+        setTitle("Keep Fight");
+        setLocation(400, 100);
+        setResizable(false);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setModal(true);
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
+
+        mainPanel = new JPanel();
+        subPanel = new JPanel();
+        label = new JLabel("Do you want to keep fighting?");
+        buttonYes = new JButton("Yes");
+        buttonNo = new JButton("No");
+
+        mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        subPanel.setLayout(new BorderLayout(0, 10));
+        subPanel.add(label, BorderLayout.NORTH);
+        subPanel.add(buttonYes, BorderLayout.CENTER);
+        subPanel.add(buttonNo, BorderLayout.SOUTH);
+        mainPanel.add(subPanel);
+
+        add(mainPanel);
+
+        buttonYes.addActionListener(this);
+        buttonNo.addActionListener(this);
+
+        setVisible(true);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Yes")) { // player wants to play again
+            if (winner) { // the player wins
+                // reset the warriors life and sets a random warrior with a random weapon for the bot
+                // save the points of the player
+                warrior1.setLife(warrior1.getInitialLife());
+                warrior2.setLife(warrior2.getInitialLife());
+                warrior2 = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
+
+                // set an avaible weapon for the bot warrior
+                Query query = new Query();
+                ResultSet rs;
+                rs = query.makeSelect("select * from weapons_available where warrior_id = " + warrior2.getId());
+                try {
+                    rs.last();
+                    int rowCount = rs.getRow();
+                    rs.beforeFirst();
+                    rs.absolute((int)(Math.random()*rowCount) + 1); // random weapon id from 1 to x
+                    warrior2.setWeaponID(rs.getInt(2));
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                // we modify the bot warrior force and speed depending on the weapon
+                // we rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
+                warrior2.setForce(warrior2.getForce() + weaponsList.get(warrior2.getWeaponID() - 1).getForce());
+                warrior2.setSpeed(warrior2.getSpeed() + weaponsList.get(warrior2.getWeaponID() - 1).getSpeed());
+
+
+
+            } else { // bot wins
+                System.out.println("bot wins");
+            }
+        } else { // player do not want to play again
+            System.exit(0);
+        }
+    }
+
 }
