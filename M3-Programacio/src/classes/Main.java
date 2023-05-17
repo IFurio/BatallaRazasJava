@@ -23,8 +23,8 @@ class GameFrame1 extends JFrame implements ActionListener {
     private JButton button1, button2, button3, button4, button5;
     private JScrollPane scrollPane;
     private JTextArea console;
-    private ArrayList<Warrior> warriorsList;
-    private ArrayList<Weapon> weaponsList;
+    private final ArrayList<Warrior> warriorsList;
+    private final ArrayList<Weapon> weaponsList;
     private String userName;
     GameFrame1(String username) {
         this.userName = username;
@@ -61,7 +61,11 @@ class GameFrame1 extends JFrame implements ActionListener {
         Query query = new Query();
         query.warrior_getdata(); // set WarriorContainer class
         warriorsList = query.getMainWarriorContainer().getWarriors(); // get the warrior list
-        player2 = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
+        Warrior randWarrior = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
+        // set a NEW warrior to the bot to prevent modify te warrior of the list on the future
+        player2 = new Warrior(randWarrior.getId(),randWarrior.getName(),randWarrior.getRace(),randWarrior.getLife(),
+                randWarrior.getForce(),randWarrior.getDefense(), randWarrior.getAgility(), randWarrior.getSpeed(),
+                randWarrior.getImgUrl(), randWarrior.getSpriteUrl(), randWarrior.getPoints());
 
         query.weapon_getdata();// set WeaponContainer class
         weaponsList = query.getMainWeaponContainer().getWeapons();
@@ -157,7 +161,8 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
-        playerImg1 = new JLabel(); // this will later contain the warrior sprite image
+        // playerImg1 will later contain the warrior sprite image
+        playerImg1 = new JLabel(new ImageIcon("M3-Programacio/Images/playerNotSelected.png"));
         playerImg2 = new JLabel(new ImageIcon(player2.getSpriteUrl()));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
@@ -237,7 +242,6 @@ class GameFrame1 extends JFrame implements ActionListener {
             new Ranking();
         }
         else if (e.getActionCommand().equals("Fight")) { // click fight button
-            System.out.println("Fight");
             button4.setEnabled(false);      //Set Enable to false so the player cant click it until the turn ends
             if (player1.getLife() > 0 && player2.getLife() > 0 && player1.getWeaponID() != 0 && player2.getWeaponID() != 0) {
                 if (player1.getDealer() == 0 && player2.getDealer() == 0) { //If it get clicked for the first time
@@ -317,12 +321,16 @@ class GameFrame1 extends JFrame implements ActionListener {
                 //When there is someone with no HP
                 if (player1.getLife() <= 0) {
                     console.setText(console.getText() + "\nThe player lose, " + player2.getName() + " wins.");
+                    // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
                     new Replay(false, player1, player2, warriorsList, weaponsList,
-                            lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
+                            lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2,
+                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2);
                 } else if (player2.getLife() <= 0) {
                     console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
+                    // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
                     new Replay(true, player1, player2, warriorsList, weaponsList,
-                            lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
+                            lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2,
+                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2);
                 }
 
             }
@@ -337,7 +345,7 @@ class GameFrame1 extends JFrame implements ActionListener {
 class CharactersWindow extends JDialog {
     private JPanel mainPanel;
     private Warrior player1;
-    private ArrayList<Warrior> warriorsList;
+    private final ArrayList<Warrior> warriorsList;
     private JLabel playerImg1;
 
     CharactersWindow(Warrior player1, ArrayList<Warrior> warriorsList, JLabel playerImg1) {
@@ -360,10 +368,9 @@ class CharactersWindow extends JDialog {
 
         mainPanel.setLayout(new GridLayout(numRows,3));
 
-        for (int i = 0; i<warriorsList.size(); i++){ // we create a button for each of the warriors on the list
+        for (Warrior warrior : warriorsList) { // we create a button for each of the warriors on the list
             WarriorButon warriorButon;
-            Warrior currentWarrior = warriorsList.get(i);
-            warriorButon = new WarriorButon(currentWarrior, player1, playerImg1, new ImageIcon(currentWarrior.getImgUrl()));
+            warriorButon = new WarriorButon(warrior, player1, playerImg1, new ImageIcon(warrior.getImgUrl()));
             mainPanel.add(warriorButon);
             warriorButon.addActionListener(warriorButon); // this will treat the action of the button
         }
@@ -493,6 +500,7 @@ class WeaponButton extends JButton implements ActionListener {
         int calDefenseBarWidth = 250 * player1.getDefense() / 4; // width calculation for the defenseBar
 
         lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
+        lifeBar1.setText("100%");
         powerBar1.setBounds(50, 50, calPowerBarWidth, 10);
         agilityBar1.setBounds(50, 70, calAgilityBarWidth, 10);
         speedBar1.setBounds(50, 90, calSpeedBarWidth, 10);
@@ -520,7 +528,7 @@ class Ranking extends JFrame {
 
         try {
             int cont = 0;
-            String data = "";
+            String data;
             while (rs.next() && cont < 10) {
                 data = "ID: " + rs.getInt(1) + " Name: " + rs.getString(2) + " Points: " + rs.getInt(3) + "\n\n";
                 ranking.setText(ranking.getText() + data);
@@ -542,30 +550,54 @@ class Ranking extends JFrame {
         setVisible(true);
     }
 }
-class Replay extends JDialog {
+class Replay extends JDialog implements ActionListener {
     private JPanel mainPanel, subPanel;
     private JLabel label;
-    private CustomButton buttonYes, buttonNo;
+    private JButton buttonYes, buttonNo;
+    private Boolean playerWins;
+    private Warrior warrior1, warrior2;
+    private final ArrayList<Warrior> warriorsList;
+    private final ArrayList<Weapon> weaponsList;
+    private JLabel lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2;
+    private JLabel defenseBar1, defenseBar2;
+    private JLabel playerImg1, playerImg2;
 
-    Replay (Boolean winner, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
-            ArrayList<Weapon> weaponsList, JLabel lifeBar2, JLabel powerBar2, JLabel agilityBar2, JLabel speedBar2,
-            JLabel defenseBar2, JLabel playerImg2) {
+    Replay (Boolean playerWins, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
+            ArrayList<Weapon> weaponsList, JLabel lifeBar1, JLabel lifeBar2, JLabel powerBar1, JLabel powerBar2,
+            JLabel agilityBar1, JLabel agilityBar2, JLabel speedBar1, JLabel speedBar2,
+            JLabel defenseBar1, JLabel defenseBar2, JLabel playerImg1, JLabel playerImg2) {
+        this.playerWins = playerWins;
+        this.warrior1 = warrior1;
+        this.warrior2 = warrior2;
+        this.warriorsList = warriorsList;
+        this.weaponsList = weaponsList;
+        this.lifeBar1 = lifeBar1;
+        this.lifeBar2 = lifeBar2;
+        this.powerBar1 = powerBar1;
+        this.powerBar2 = powerBar2;
+        this.agilityBar1 = agilityBar1;
+        this.agilityBar2 = agilityBar2;
+        this.speedBar1 = speedBar1;
+        this.speedBar2 = speedBar2;
+        this.defenseBar1 = defenseBar1;
+        this.defenseBar2 = defenseBar2;
+        this.playerImg1 = playerImg1;
+        this.playerImg2 = playerImg2;
 
         setSize(300, 200);
         setTitle("Keep Fight");
         setLocation(400, 100);
         setResizable(false);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setModal(true);
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         mainPanel = new JPanel();
         subPanel = new JPanel();
         label = new JLabel("Do you want to keep fighting?");
-        buttonYes = new CustomButton("Yes", winner, warrior1, warrior2, warriorsList,
-                weaponsList, lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
-        buttonNo = new CustomButton("No", winner, warrior1, warrior2, warriorsList,
-                weaponsList, lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2, playerImg2);
+
+        buttonYes = new JButton("Yes");
+        buttonNo = new JButton("No");
 
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         subPanel.setLayout(new BorderLayout(0, 10));
@@ -576,77 +608,51 @@ class Replay extends JDialog {
 
         add(mainPanel);
 
-        buttonYes.addActionListener(buttonYes);
-        buttonNo.addActionListener(buttonNo);
+        buttonYes.addActionListener(this);
+        buttonNo.addActionListener(this);
 
         setVisible(true);
-    }
-
-}
-class CustomButton extends JButton implements ActionListener {
-    private Boolean winner;
-    private Warrior warrior1, warrior2;
-    private ArrayList<Warrior> warriorsList;
-    private ArrayList<Weapon> weaponsList;
-    private JLabel lifeBar2, powerBar2, agilityBar2, speedBar2, defenseBar2;
-    private JLabel playerImg2;
-
-    CustomButton (String textbutton, Boolean winner, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
-                  ArrayList<Weapon> weaponsList, JLabel lifeBar2, JLabel powerBar2, JLabel agilityBar2, JLabel speedBar2,
-                  JLabel defenseBar2, JLabel playerImg2) {
-        super(textbutton);
-        this.winner = winner;
-        this.warrior1 = warrior1;
-        this.warrior2 = warrior2;
-        this.warriorsList = warriorsList;
-        this.weaponsList = weaponsList;
-        this.lifeBar2 = lifeBar2;
-        this.powerBar2 = powerBar2;
-        this.agilityBar2 = agilityBar2;
-        this.speedBar2 = speedBar2;
-        this.defenseBar2 = defenseBar2;
-        this.playerImg2 = playerImg2;
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Yes")) { // player wants to play again
-            if (winner) { // the player wins
+            if (playerWins) { // the player wins
                 // reset the warriors life and sets a random warrior with a random weapon for the bot
-                // save the points of the player
-                System.out.println(warrior2.getName());
+                // Player points are added to the total and are saved
+                warrior1.setTotalPoints(warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID()).getPoints());
                 warrior1.setLife(warrior1.getInitialLife());
                 warrior2.setLife(warrior2.getInitialLife());
-                warrior2 = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
-                System.out.println(warrior2.getName());
+                Warrior randWarrior;
+                randWarrior = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
                 Query query = new Query();
                 ResultSet rs;
-                rs = query.makeSelect("select * from weapons_available where warrior_id = " + warrior2.getId());
+                rs = query.makeSelect("select * from weapons_available where warrior_id = " + randWarrior.getId());
                 try {
                     rs.last();
                     int rowCount = rs.getRow();
                     rs.beforeFirst();
                     rs.absolute((int)(Math.random()*rowCount) + 1); // random weapon id from 1 to x
-                    warrior2.setWeaponID(rs.getInt(2));
+                    randWarrior.setWeaponID(rs.getInt(2));
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
                 // we set the bot warrior atributes 1 by 1. Oterwhise it will not work
-                warrior2.setId(warrior2.getId());
-                warrior2.setName(warrior2.getName());
-                warrior2.setAgility(warrior2.getAgility());
-                warrior2.setDefense(warrior2.getDefense());
-                warrior2.setForce(warrior2.getForce());
-                warrior2.setInitialForce(warrior2.getForce());
-                warrior2.setImgUrl(warrior2.getImgUrl());
-                warrior2.setLife(warrior2.getLife());
-                warrior2.setInitialLife(warrior2.getLife());
-                warrior2.setPoints(warrior2.getPoints());
-                warrior2.setRace(warrior2.getRace());
-                warrior2.setSpeed(warrior2.getSpeed());
-                warrior2.setInitialSpeed(warrior2.getInitialSpeed());
-                warrior2.setSpriteUrl(warrior2.getSpriteUrl());
+                warrior2.setId(randWarrior.getId());
+                warrior2.setName(randWarrior.getName());
+                warrior2.setAgility(randWarrior.getAgility());
+                warrior2.setDefense(randWarrior.getDefense());
+                warrior2.setForce(randWarrior.getForce());
+                warrior2.setInitialForce(randWarrior.getForce());
+                warrior2.setImgUrl(randWarrior.getImgUrl());
+                warrior2.setLife(randWarrior.getLife());
+                warrior2.setInitialLife(randWarrior.getLife());
+                warrior2.setPoints(randWarrior.getPoints());
+                warrior2.setRace(randWarrior.getRace());
+                warrior2.setSpeed(randWarrior.getSpeed());
+                warrior2.setInitialSpeed(randWarrior.getInitialSpeed());
+                warrior2.setSpriteUrl(randWarrior.getSpriteUrl());
+                warrior2.setWeaponID(randWarrior.getWeaponID());
 
                 // we modify the bot warrior force and speed depending on the weapon
                 // we rest 1 because the bbdd goes from 1 to 9 and the arraylist from 0 to 8
@@ -657,10 +663,57 @@ class CustomButton extends JButton implements ActionListener {
                 ImageIcon img = new ImageIcon(warrior2.getSpriteUrl());
                 playerImg2.setIcon(img);
 
+                // Calculate again all the statsBars
+                int lifePercentage = 100 * warrior2.getLife() / warrior2.getInitialLife();
+                int calLifeBarWidth = 250 * lifePercentage / 100;
+                lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar2.setText("100%");
+
+                int calPowerBarWidth = 250 * warrior2.getForce() / 11; // width calculation for the powerBar
+                powerBar2.setBounds(390, 50, calPowerBarWidth, 10); // max width 250
+
+                int calAgilityBarWidth = 250 * warrior2.getAgility() / 7; // width calculation for the agilityBar
+                agilityBar2.setBounds(390, 70, calAgilityBarWidth, 10);
+
+                int calSpeedBarWidth = 250 * warrior2.getSpeed() / 12; // width calculation for the speedBar
+                speedBar2.setBounds(390, 90, calSpeedBarWidth, 10);
+
+                int calDefenseBarWidth = 250 * warrior2.getDefense() / 4; // width calculation for the defenseBar
+                defenseBar2.setBounds(390, 110, calDefenseBarWidth, 10);
+
+                // Reset the player lifeBar
+                lifePercentage = 100 * warrior1.getLife() / warrior1.getInitialLife();
+                calLifeBarWidth = 250 * lifePercentage / 100;
+                lifeBar1.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar1.setText("100%");
+
             } else { // bot wins
-                System.out.println("bot wins");
+                // save the points of the player into the bdd
+                // reset the bot warrior life and set the player warrior and weapon to null
+                warrior2.setLife(warrior2.getInitialLife());
+                warrior1.setWeaponID(0);
+
+                // Set an empty name is used to later force the player to choose a new character
+                warrior1.setName("");
+
+                // Set the warrior icon to null
+                ImageIcon img = new ImageIcon("M3-Programacio/Images/playerNotSelected.png");
+                playerImg1.setIcon(img);
+
+                // Reset the bot and player lifebar
+                int lifePercentage = 100 * warrior2.getLife() / warrior2.getInitialLife();
+                int calLifeBarWidth = 250 * lifePercentage / 100;
+                lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar2.setText("100%");
+
+                lifePercentage = 100 * warrior1.getLife() / warrior1.getInitialLife();
+                calLifeBarWidth = 250 * lifePercentage / 100;
+                lifeBar1.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar1.setText("100%");
             }
+            dispose();
         } else { // player do not want to play again
+            // save the total points of the player into the bdd and the game is over
             System.exit(0);
         }
     }

@@ -18,6 +18,7 @@ public class Warrior {
     private String imgUrl;
     private String spriteUrl;
     private int points;
+    private int totalPoints;
     private int dealer = 0, dmgAttack = 0, dmgReceived = 0, weaponID = 0;
 
     public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, String imgUrl, String spriteUrl, int points) {
@@ -80,6 +81,9 @@ public class Warrior {
     public void setDmgReceived(int dmg) {this.dmgReceived = dmg;}
     public int getWeaponID(){return weaponID;}
     public void setWeaponID(int w) {this.weaponID = w;}
+
+    public int getTotalPoints() { return totalPoints; }
+    public void setTotalPoints(int totalPoints) { this.totalPoints = totalPoints; }
 
     public int doAtack() {
         Random r = new Random();
