@@ -616,7 +616,7 @@ class Replay extends JDialog implements ActionListener {
             if (playerWins) { // the player wins
                 // reset the warriors life and sets a random warrior with a random weapon for the bot
                 // Player points are added to the total and are saved
-                warrior1.setTotalPoints(warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID()).getPoints());
+                warrior1.setTotalPoints(warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID() - 1).getPoints());
                 warrior1.setLife(warrior1.getInitialLife());
                 warrior2.setLife(warrior2.getInitialLife());
                 Warrior randWarrior;
@@ -680,7 +680,7 @@ class Replay extends JDialog implements ActionListener {
                 // Reset the player lifeBar
                 lifePercentage = 100 * warrior1.getLife() / warrior1.getInitialLife();
                 calLifeBarWidth = 250 * lifePercentage / 100;
-                lifeBar1.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
                 lifeBar1.setText("100%");
 
             } else { // bot wins
