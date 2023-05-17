@@ -1,5 +1,6 @@
 package classes;
 
+import com.mysql.cj.xdevapi.UpdateResult;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ public class Query {
     private Connection con;
     private Statement stm;
     private ResultSet rs;
+    private PreparedStatement pstm;
     private WarriorContainer mainWarriorContainer;
     private WeaponContainer mainWeaponContainer;
 
@@ -96,6 +98,65 @@ public class Query {
             return null;
         }
     }
+
+    public UpdateResult insertplayer(String username, int gbl_p) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, pass);
+            pstm = con.prepareStatement("INSERT INTO players (player_name,global_points) VALUES (?,?)");
+            pstm.setString(1,username);
+            pstm.setInt(2,gbl_p);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Connection not created correctly");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver not loaded correctly");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public UpdateResult insertbattle(int p_id,int w_id,int ww_id,int op_id,int opw_id,int inj_caused,int inj_suffered,int bttl_p) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, pass);
+            pstm = con.prepareStatement("INSERT INTO battle (player_id,warrior_id,warrior_weapon_id,opponent_id,opponent_weapon_id,injuries_caused,injuries_suffered,battle_points) VALUES (?,?,?,?,?,?,?,?)");
+            pstm.setInt(1,p_id);
+            pstm.setInt(2,w_id);
+            pstm.setInt(3,ww_id);
+            pstm.setInt(4,op_id);
+            pstm.setInt(5,opw_id);
+            pstm.setInt(6,inj_caused);
+            pstm.setInt(7,inj_suffered);
+            pstm.setInt(8,bttl_p);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Connection not created correctly");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver not loaded correctly");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updateplayer(int player_id, String username,int gbl_p) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, pass);
+            pstm = con.prepareStatement("UPDATE players SET global_points=? WHERE player_name=? AND player_id=?");
+            pstm.setInt(1,gbl_p);
+            pstm.setString(2,username);
+            pstm.setInt(3,player_id);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Connection not created correctly");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver not loaded correctly");
+        }
+    }
+
     public void closeConnections() { // this is used to close all the unnecessary resources
         try {
             if (rs != null) { rs.close();}

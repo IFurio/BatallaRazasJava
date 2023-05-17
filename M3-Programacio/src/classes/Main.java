@@ -320,13 +320,13 @@ class GameFrame1 extends JFrame implements ActionListener {
                     // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
                     new Replay(false, player1, player2, warriorsList, weaponsList,
                             lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2,
-                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2);
+                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2, userName);
                 } else if (player2.getLife() <= 0) {
                     console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
                     // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
                     new Replay(true, player1, player2, warriorsList, weaponsList,
                             lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2,
-                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2);
+                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2, userName);
                 }
 
             }
@@ -334,7 +334,6 @@ class GameFrame1 extends JFrame implements ActionListener {
         }
         else if (e.getActionCommand().equals("Clear Console")) {
             console.setText("");
-            System.out.println(player2.getName());
         }
     }
 }
@@ -557,11 +556,12 @@ class Replay extends JDialog implements ActionListener {
     private JLabel lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2;
     private JLabel defenseBar1, defenseBar2;
     private JLabel playerImg1, playerImg2;
+    private String userName;
 
     Replay (Boolean playerWins, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
             ArrayList<Weapon> weaponsList, JLabel lifeBar1, JLabel lifeBar2, JLabel powerBar1, JLabel powerBar2,
             JLabel agilityBar1, JLabel agilityBar2, JLabel speedBar1, JLabel speedBar2,
-            JLabel defenseBar1, JLabel defenseBar2, JLabel playerImg1, JLabel playerImg2) {
+            JLabel defenseBar1, JLabel defenseBar2, JLabel playerImg1, JLabel playerImg2, String userName) {
         this.playerWins = playerWins;
         this.warrior1 = warrior1;
         this.warrior2 = warrior2;
@@ -579,6 +579,7 @@ class Replay extends JDialog implements ActionListener {
         this.defenseBar2 = defenseBar2;
         this.playerImg1 = playerImg1;
         this.playerImg2 = playerImg2;
+        this.userName = userName;
 
         setSize(300, 200);
         setTitle("Keep Fight");
@@ -617,6 +618,7 @@ class Replay extends JDialog implements ActionListener {
                 // reset the warriors life and sets a random warrior with a random weapon for the bot
                 // Player points are added to the total and are saved
                 warrior1.setTotalPoints(warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID() - 1).getPoints());
+                warrior1.setDefeatedEnemiesCount(warrior1.getDefeatedEnemiesCount() + 1);
                 warrior1.setLife(warrior1.getInitialLife());
                 warrior2.setLife(warrior2.getInitialLife());
                 Warrior randWarrior;
@@ -684,7 +686,6 @@ class Replay extends JDialog implements ActionListener {
                 lifeBar1.setText("100%");
 
             } else { // bot wins
-                // save the points of the player into the bdd
                 // reset the bot warrior life and set the player warrior and weapon to null
                 warrior2.setLife(warrior2.getInitialLife());
                 warrior1.setWeaponID(0);
@@ -706,6 +707,18 @@ class Replay extends JDialog implements ActionListener {
                 calLifeBarWidth = 250 * lifePercentage / 100;
                 lifeBar1.setBounds(390, 30, calLifeBarWidth, 10);
                 lifeBar1.setText("100%");
+
+                Query query = new Query();
+                ResultSet rs;
+                rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
+                try {
+                    rs.next();
+                    query.updateplayer(rs.getInt(1), userName, rs.getInt(3));
+                    //query.insertbattle(rs.getInt(1),);
+                    query.closeConnections();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             dispose();
         } else { // player do not want to play again

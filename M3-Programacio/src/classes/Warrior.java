@@ -19,7 +19,9 @@ public class Warrior {
     private String spriteUrl;
     private int points;
     private int totalPoints;
+    private int defeatedEnemiesCount = 0;
     private int dealer = 0, dmgAttack = 0, dmgReceived = 0, weaponID = 0;
+    private int injuresCaused, injuresSufered;
 
     public Warrior(int id, String name, String race, int life, int force, int defense, int agility, int speed, String imgUrl, String spriteUrl, int points) {
         this.id = id;
@@ -81,9 +83,14 @@ public class Warrior {
     public void setDmgReceived(int dmg) {this.dmgReceived = dmg;}
     public int getWeaponID(){return weaponID;}
     public void setWeaponID(int w) {this.weaponID = w;}
-
     public int getTotalPoints() { return totalPoints; }
     public void setTotalPoints(int totalPoints) { this.totalPoints = totalPoints; }
+    public int getDefeatedEnemiesCount() { return defeatedEnemiesCount; }
+    public void setDefeatedEnemiesCount(int defeatedEnemiesCount) { this.defeatedEnemiesCount = defeatedEnemiesCount; }
+    public int getInjuresCaused() { return injuresCaused; }
+    public void setInjuresCaused(int injuresCaused) { this.injuresCaused = injuresCaused; }
+    public int getInjuresSufered() { return injuresSufered; }
+    public void setInjuresSufered(int injuresSufered) { this.injuresSufered = injuresSufered; }
 
     public int doAtack() {
         Random r = new Random();

@@ -43,6 +43,9 @@ public class InitialConfigurations extends JFrame implements ActionListener {
         }
         else {
             dispose();
+            Query query = new Query();
+            query.insertplayer(fill.getText(),0);
+            query.closeConnections();
             new GameFrame1(fill.getText());
         }
     }
