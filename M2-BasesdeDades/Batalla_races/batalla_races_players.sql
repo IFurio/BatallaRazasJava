@@ -25,12 +25,9 @@ DROP TABLE IF EXISTS `players`;
 CREATE TABLE `players` (
   `player_id` int NOT NULL AUTO_INCREMENT,
   `player_name` varchar(25) NOT NULL,
-  `global_points` int NOT NULL,
-  `total_damage` int NOT NULL,
-  `total_damage_suffered` int NOT NULL,
-  `defeated_enemies` int NOT NULL,
+  `global_points` int DEFAULT '0',
   PRIMARY KEY (`player_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +36,7 @@ CREATE TABLE `players` (
 
 LOCK TABLES `players` WRITE;
 /*!40000 ALTER TABLE `players` DISABLE KEYS */;
-INSERT INTO `players` VALUES (1,'Luis',45,80,23,2),(2,'Paco',45,80,23,2),(3,'Miguel',300,80,23,2),(4,'Juan',214,80,23,2),(5,'Alberto',890,80,23,2),(6,'Ibai',140,80,23,2),(7,'Carla',636,80,23,2),(8,'Sandra',55,80,23,2),(9,'Paula',1050,80,23,2),(10,'Carlos',240,80,23,2);
+INSERT INTO `players` VALUES (13,'Carlos',240),(14,'Paco',580),(15,'Paco',580),(16,'Paula',1546),(17,'Miguel',56),(18,'Sandra',634),(19,'XxAntonioxX95',1354);
 /*!40000 ALTER TABLE `players` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-16 16:07:54
+-- Dump completed on 2023-05-17 17:58:53

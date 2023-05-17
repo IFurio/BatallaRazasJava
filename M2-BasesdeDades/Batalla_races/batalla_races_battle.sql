@@ -23,17 +23,17 @@ DROP TABLE IF EXISTS `battle`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `battle` (
-  `battle_id` int NOT NULL,
-  `player_id` varchar(45) NOT NULL,
-  `warrior_id` varchar(45) NOT NULL,
-  `warrior_weapon_id` varchar(45) NOT NULL,
-  `opponent_id` varchar(45) NOT NULL,
-  `opponent_weapon_id` varchar(45) NOT NULL,
-  `injuries_caused` varchar(45) NOT NULL,
-  `injuries_suffered` varchar(45) NOT NULL,
-  `battle_points` varchar(45) NOT NULL,
+  `battle_id` int NOT NULL AUTO_INCREMENT,
+  `player_id` int NOT NULL,
+  `warrior_id` int NOT NULL,
+  `warrior_weapon_id` int NOT NULL,
+  `opponent_id` int NOT NULL,
+  `opponent_weapon_id` int NOT NULL,
+  `injuries_caused` int DEFAULT '0',
+  `injuries_suffered` int DEFAULT '0',
+  `battle_points` int DEFAULT '0',
   PRIMARY KEY (`battle_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,6 @@ CREATE TABLE `battle` (
 
 LOCK TABLES `battle` WRITE;
 /*!40000 ALTER TABLE `battle` DISABLE KEYS */;
-INSERT INTO `battle` VALUES (1,'2','1','2','2','2','0','0','100');
 /*!40000 ALTER TABLE `battle` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-16 16:07:54
+-- Dump completed on 2023-05-17 17:58:53
