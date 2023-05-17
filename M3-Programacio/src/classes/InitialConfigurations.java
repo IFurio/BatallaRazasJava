@@ -8,14 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InitialConfigurations extends JFrame implements ActionListener {
-    private String name;
     private int id;
     private JTextField fill;
 
     public InitialConfigurations() {
         setSize(500, 200);
         setTitle("Insert Your Name");
-        setLocation(400, 100);
+        setLocation(580, 250);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
@@ -38,12 +37,6 @@ public class InitialConfigurations extends JFrame implements ActionListener {
 
         setVisible(true);
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
     public int getId() {
         return id;
     }
@@ -56,9 +49,8 @@ public class InitialConfigurations extends JFrame implements ActionListener {
             fill.setText("");
         }
         else {
-            setName(fill.getText());
             dispose();
-            new GameFrame1();
+            new GameFrame1(fill.getText());
         }
     }
 }

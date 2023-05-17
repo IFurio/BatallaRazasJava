@@ -3,8 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,7 +24,9 @@ class GameFrame1 extends JFrame implements ActionListener {
     private JTextArea console;
     private ArrayList<Warrior> warriorsList;
     private ArrayList<Weapon> weaponsList;
-    GameFrame1() {
+    private String username;
+    GameFrame1(String username) {
+        this.username = username;
         setSize(960, 680);
         setTitle("RacesBattle");
         setLocation(400, 100);
@@ -490,9 +491,11 @@ class Ranking extends JFrame {
         panel2.add(ranking);
         panel_principal.add(panel1);
         panel_principal.add(panel2);
+        setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
         add(panel_principal, BorderLayout.CENTER);
         setTitle("Ranking");
-        setSize(400, 400);
+        setSize(350, 400);
+        setLocation(60,100);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
