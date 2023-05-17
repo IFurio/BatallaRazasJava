@@ -111,7 +111,6 @@ class GameFrame1 extends JFrame implements ActionListener {
         powerBar2.setBackground(Color.RED);
         int calPowerBarWidth = 250 * player2.getForce() / 11; // width calculation for the powerBar
         powerBar2.setBounds(390, 50, calPowerBarWidth, 10); // max width 250
-
         powerBar2.setOpaque(true);
 
         agilityBar1 = new JLabel("Agility");
@@ -125,7 +124,6 @@ class GameFrame1 extends JFrame implements ActionListener {
         int calAgilityBarWidth = 250 * player2.getAgility() / 7; // width calculation for the agilityBar
         agilityBar2.setBounds(390, 70, calAgilityBarWidth, 10);
         agilityBar2.setOpaque(true);
-
 
         speedBar1 = new JLabel("Speed");
         speedBar1.setBackground(Color.CYAN);
@@ -157,7 +155,7 @@ class GameFrame1 extends JFrame implements ActionListener {
         button4.setBackground(Color.YELLOW);
         button5.setBackground(Color.YELLOW);
 
-        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setLayout(new BorderLayout(0, 30));
 
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
@@ -166,8 +164,6 @@ class GameFrame1 extends JFrame implements ActionListener {
         playerImg2 = new JLabel(new ImageIcon(player2.getSpriteUrl()));
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
-        imgLabel2.setBounds(0, 300, getWidth(), getHeight());
-        imgLabel2.setLocation(300,300);
         imgLabel.setBounds(0, -70, getWidth(), getHeight());
 
         mainPanel.add(imgLabel);
