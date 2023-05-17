@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InitialConfigurations extends JFrame implements ActionListener {
-    private String name;
-    private int id;
     private JTextField fill;
 
     public InitialConfigurations() {
@@ -38,27 +36,14 @@ public class InitialConfigurations extends JFrame implements ActionListener {
 
         setVisible(true);
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if (fill.getText().isBlank()) {
             fill.setText("");
         }
         else {
-            setName(fill.getText());
             dispose();
-            new GameFrame1();
+            new GameFrame1(fill.getText());
         }
     }
 }
