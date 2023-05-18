@@ -1,0 +1,156 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url("../Images/back.png");
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-size:cover;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0px;
+    color: rgb(255, 209, 44);
+    text-shadow: 4px 3px 0 #7A7A7A;
+    transition: color 1s;
+}
+
+h1:hover{
+    color: rgb(10, 207, 10);
+}
+
+table {
+    border-collapse: collapse;
+    color: white;
+}
+
+td { 
+    min-width: 143px;
+}
+
+tr { 
+    display: table;
+    margin-bottom: 30px;
+}
+
+td:nth-child(1) {
+    padding-right: 70px;
+    font-weight: bold;
+    text-shadow: 4px 3px 0 #7A7A7A;
+    transition: color 0.8s;
+}
+
+td:nth-child(1):hover {
+    color:aquamarine;
+}
+
+td:nth-child(2) {
+    font-weight: 600;
+    color: rgb(51, 51, 255);
+    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #72b6ff, 0 0 30px #72b6ff, 0 0 40px #72b6ff, 0 0 55px #72b6ff, 0 0 75px #72b6ff;
+}
+
+td:nth-child(3) {
+    font-weight: 600;
+    color: rgb(218, 18, 18);
+    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #ff4a4a, 0 0 30px #ff4a4a, 0 0 40px #ff4a4a, 0 0 55px #ff4a4a, 0 0 75px #ff4a4a;
+}
+
+
+.battleinfo{
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display:flex ;
+    flex-direction: column;
+    max-width: 90%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.photo{
+    max-width: 100px;
+    max-height: 100px;
+    margin: 20px;
+    box-shadow: 5px 5px 5px 0px #000000, inset 4px 4px 15px 0px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+}
+
+.weapon { 
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+}
+
+.portaits{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 79px;
+}
+
+img {
+    transition: all 1000ms;
+}
+
+img:hover{
+    transform: scale(1.4);
+    filter: brightness(1.4);
+}
+
+@media only screen and (max-width: 558px) {
+    .battleinfo{
+        width: 85%;
+    }
+
+    table{
+        width: 100%;
+        font-size: medium;
+    }
+
+    .photo {
+        max-width: 70px;
+        margin: 10px;
+    }
+
+    .portaits {
+        padding-left: 0;
+    }
+
+    .weapon {
+        width: 40px;
+        height: 40px;
+        margin: 20px;
+    }
+
+    td {
+        min-width: 20%;
+    }
+
+    td:nth-child(1) {
+        width: 150px;
+        box-sizing: border-box;
+        padding-right: 20px;
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
