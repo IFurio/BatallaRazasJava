@@ -259,7 +259,7 @@ class GameFrame1 extends JFrame implements ActionListener {
                 rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
                 try {
                     rs.next();
-                    query.updateplayer(rs.getInt(1), userName, player1.getTotalPoints());
+                    query.updateplayer(rs.getInt(1), userName, rs.getInt(2) + player1.getTotalPoints());
                     query.insertbattle(rs.getInt(1), player1.getId(), player1.getWeaponID(), player2.getId(),
                             player2.getWeaponID(), player1.getInjuresCaused(), player1.getInjuresSufered(), player1.getTotalPoints());
                     query.closeConnections();
@@ -711,7 +711,7 @@ class Replay extends JDialog implements ActionListener {
                 rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
                 try {
                     rs.next();
-                    query.updateplayer(rs.getInt(1), userName, warrior1.getTotalPoints());
+                    query.updateplayer(rs.getInt(1), userName, rs.getInt(2) + warrior1.getTotalPoints());
                     query.insertbattle(rs.getInt(1), warrior1.getId(), warrior1.getWeaponID(), warrior2.getId(),
                             warrior2.getWeaponID(), warrior1.getInjuresCaused(), warrior1.getInjuresSufered(), warrior1.getTotalPoints());
                     query.closeConnections();
@@ -730,7 +730,7 @@ class Replay extends JDialog implements ActionListener {
             rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
             try {
                 rs.next();
-                query.updateplayer(rs.getInt(1), userName, warrior1.getTotalPoints());
+                query.updateplayer(rs.getInt(1), userName, rs.getInt(2) + warrior1.getTotalPoints());
                 query.insertbattle(rs.getInt(1), warrior1.getId(), warrior1.getWeaponID(), warrior2.getId(),
                         warrior2.getWeaponID(), warrior1.getInjuresCaused(), warrior1.getInjuresSufered(), warrior1.getTotalPoints());
                 query.closeConnections();
