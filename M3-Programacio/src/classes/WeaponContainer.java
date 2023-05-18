@@ -3,7 +3,7 @@ package classes;
 import java.util.ArrayList;
 
 public class WeaponContainer {
-    private ArrayList<Weapon> weapons;
+    private final ArrayList<Weapon> weapons;
 
     public WeaponContainer(ArrayList<Weapon> weapons) {
         this.weapons = weapons;
@@ -11,7 +11,5 @@ public class WeaponContainer {
     public ArrayList<Weapon> getWeapons() {
         return weapons;
     }
-    public void setWeapons(ArrayList<Weapon> weapons) {
-        this.weapons = weapons;
-    }
+
 }

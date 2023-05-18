@@ -11,21 +11,22 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // ENTER TO THE QUERY CLASS TO MAKE SURE YOU ARE USING YOUR CURRENT CREDENTIALS!!!!!
-        new InitialConfigurations(); // This is used to config the player name
+        new InitialConfigurations(); // This is used to config the new user
 
     }
 }
 class GameFrame1 extends JFrame implements ActionListener {
     private JPanel mainPanel, leftPanel, rightPanel, centerPanel, subPanelPlayers;
     private JLabel imgLabel, imgLabel2, lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1,
-            speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2;
+            speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2, weaponLabel1, weaponLabel2;
     private Warrior player1, player2;
     private JButton button1, button2, button3, button4, button5;
     private JScrollPane scrollPane;
     private JTextArea console;
     private final ArrayList<Warrior> warriorsList;
     private final ArrayList<Weapon> weaponsList;
-    private String userName;
+    private final String userName;
+
     GameFrame1(String username) {
         this.userName = username;
         setSize(960, 680);
@@ -57,18 +58,17 @@ class GameFrame1 extends JFrame implements ActionListener {
         // set an empty warrior for the player. Later the warrior will be chosen
         player1 = new Warrior(0, "", "", 0, 0, 0, 0, 0, "","", 0);
 
-
         Query query = new Query();
         query.warrior_getdata(); // set WarriorContainer class
         warriorsList = query.getMainWarriorContainer().getWarriors(); // get the warrior list
         Warrior randWarrior = warriorsList.get((int)(Math.random()*warriorsList.size())); // select a random bot warrior
-        // set a NEW warrior to the bot to prevent modify te warrior of the list on the future
+        // Set a NEW warrior to the bot to prevent modify te warrior of the list on the future
         player2 = new Warrior(randWarrior.getId(),randWarrior.getName(),randWarrior.getRace(),randWarrior.getLife(),
                 randWarrior.getForce(),randWarrior.getDefense(), randWarrior.getAgility(), randWarrior.getSpeed(),
                 randWarrior.getImgUrl(), randWarrior.getSpriteUrl(), randWarrior.getPoints());
 
         query.weapon_getdata();// set WeaponContainer class
-        weaponsList = query.getMainWeaponContainer().getWeapons();
+        weaponsList = query.getMainWeaponContainer().getWeapons(); // get weapons list
 
         // set an avaible weapon for the bot warrior
         ResultSet rs;
@@ -89,7 +89,7 @@ class GameFrame1 extends JFrame implements ActionListener {
 
         lifeBar1 = new JLabel("100%");
         lifeBar1.setBackground(Color.GREEN);
-        lifeBar1.setBounds(50, 30, 250, 10);
+        lifeBar1.setBounds(0, 30, 250, 10);
         lifeBar1.setOpaque(true);
         //lifeBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
@@ -98,55 +98,55 @@ class GameFrame1 extends JFrame implements ActionListener {
         int lifePercentage = 100 * player2.getLife() / player2.getInitialLife();
         int calLifeBarWidth = 250 * lifePercentage / 100;
 
-        lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+        lifeBar2.setBounds(340, 30, calLifeBarWidth, 10);
         lifeBar2.setOpaque(true);
 
         powerBar1 = new JLabel("Power");
         powerBar1.setBackground(Color.RED);
-        powerBar1.setBounds(50, 50, 250, 10);
+        powerBar1.setBounds(0, 50, 250, 10);
         powerBar1.setOpaque(true);
         //powerBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         powerBar2 = new JLabel("Power");
         powerBar2.setBackground(Color.RED);
         int calPowerBarWidth = 250 * player2.getForce() / 11; // width calculation for the powerBar
-        powerBar2.setBounds(390, 50, calPowerBarWidth, 10); // max width 250
+        powerBar2.setBounds(340, 50, calPowerBarWidth, 10); // max width 250
         powerBar2.setOpaque(true);
 
         agilityBar1 = new JLabel("Agility");
         agilityBar1.setBackground(Color.YELLOW);
-        agilityBar1.setBounds(50, 70, 250, 10);
+        agilityBar1.setBounds(0, 70, 250, 10);
         agilityBar1.setOpaque(true);
         //agilityBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         agilityBar2 = new JLabel("Agility");
         agilityBar2.setBackground(Color.YELLOW);
         int calAgilityBarWidth = 250 * player2.getAgility() / 7; // width calculation for the agilityBar
-        agilityBar2.setBounds(390, 70, calAgilityBarWidth, 10);
+        agilityBar2.setBounds(340, 70, calAgilityBarWidth, 10);
         agilityBar2.setOpaque(true);
 
         speedBar1 = new JLabel("Speed");
         speedBar1.setBackground(Color.CYAN);
-        speedBar1.setBounds(50, 90, 250, 10);
+        speedBar1.setBounds(0, 90, 250, 10);
         speedBar1.setOpaque(true);
         //speedBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         speedBar2 = new JLabel("Speed");
         speedBar2.setBackground(Color.CYAN);
         int calSpeedBarWidth = 250 * player2.getSpeed() / 12; // width calculation for the speedBar
-        speedBar2.setBounds(390, 90, calSpeedBarWidth, 10);
+        speedBar2.setBounds(340, 90, calSpeedBarWidth, 10);
         speedBar2.setOpaque(true);
 
         defenseBar1 = new JLabel("Defense");
         defenseBar1.setBackground(Color.WHITE);
-        defenseBar1.setBounds(50, 110, 250, 10);
+        defenseBar1.setBounds(0, 110, 250, 10);
         defenseBar1.setOpaque(true);
         //defenseBar1.setHorizontalAlignment(SwingConstants.RIGHT);
 
         defenseBar2 = new JLabel("Defense");
         defenseBar2.setBackground(Color.WHITE);
         int calDefenseBarWidth = 250 * player2.getDefense() / 4; // width calculation for the defenseBar
-        defenseBar2.setBounds(390, 110, calDefenseBarWidth, 10);
+        defenseBar2.setBounds(340, 110, calDefenseBarWidth, 10);
         defenseBar2.setOpaque(true);
 
         button1.setBackground(Color.YELLOW);
@@ -155,7 +155,7 @@ class GameFrame1 extends JFrame implements ActionListener {
         button4.setBackground(Color.YELLOW);
         button5.setBackground(Color.YELLOW);
 
-        mainPanel.setLayout(new BorderLayout(0, 30));
+        mainPanel.setLayout(new BorderLayout(50, 30));
 
         imgLabel2 = new JLabel(new ImageIcon("M3-Programacio/Images/VSlogo.png"));
         imgLabel = new JLabel(new ImageIcon("M3-Programacio/Images/animation.gif"));
@@ -165,6 +165,10 @@ class GameFrame1 extends JFrame implements ActionListener {
         setIconImage(new ImageIcon("M3-Programacio/Images/fightIcon.jpg").getImage());
 
         imgLabel.setBounds(0, -70, getWidth(), getHeight());
+
+        // Set and resize the weapon image
+        weaponLabel1 = new JLabel();
+        weaponLabel2 = new JLabel(new ImageIcon(new ImageIcon(weaponsList.get(player2.getWeaponID() - 1).getImage()).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 
         mainPanel.add(imgLabel);
         mainPanel.add(leftPanel, BorderLayout.WEST);
@@ -204,6 +208,9 @@ class GameFrame1 extends JFrame implements ActionListener {
         centerPanel.add(defenseBar1, BorderLayout.NORTH);
         centerPanel.add(defenseBar2, BorderLayout.NORTH);
         centerPanel.add(imgLabel2, BorderLayout.NORTH);
+        centerPanel.add(weaponLabel1, BorderLayout.WEST);
+        centerPanel.add(weaponLabel2, BorderLayout.EAST);
+
         centerPanel.add(subPanelPlayers, BorderLayout.SOUTH);
 
         subPanelPlayers.add(playerImg1);
@@ -225,13 +232,43 @@ class GameFrame1 extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Choose Character")) { // click to choose character button
-            new CharactersWindow(player1, warriorsList, playerImg1);
+            if (player2.getLife() != player2.getInitialLife()) { // a round has passed
+                // Reset the bot life
+                player2.setLife(player2.getInitialLife());
+                // Resets the players life in case the player clicks close the window without choosing a character
+                player1.setLife(player1.getInitialLife());
+                // Calculate again the lifebars
+                int lifePercentage = 100 * player1.getLife() / player1.getInitialLife();
+                int calLifeBarWidth = 250 * lifePercentage / 100;
+                lifeBar1.setBounds(0, 30, calLifeBarWidth, 10);
+                lifeBar1.setText("100%");
+
+                lifePercentage = 100 * player2.getLife() / player2.getInitialLife();
+                calLifeBarWidth = 250 * lifePercentage / 100;
+                lifeBar2.setBounds(340, 30, calLifeBarWidth, 10);
+                lifeBar2.setText("100%");
+
+                // Insert the battle into to the bdd
+                Query query = new Query();
+                ResultSet rs;
+                rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
+                try {
+                    rs.next();
+                    query.updateplayer(rs.getInt(1), userName, player1.getTotalPoints());
+                    query.insertbattle(rs.getInt(1), player1.getId(), player1.getWeaponID(), player2.getId(),
+                            player2.getWeaponID(), player1.getInjuresCaused(), player1.getInjuresSufered(), player1.getTotalPoints());
+                    query.closeConnections();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            new CharactersWindow(player1, warriorsList, playerImg1, weaponLabel1);
         }
         else if (e.getActionCommand().equals("Choose Weapon")) { // click to choose weapon button
             if (player1.getName().equals("")) {
                 JOptionPane.showMessageDialog(null, "Choose a character first!!!");
             }else {
-                new WeaponsWindow(player1, weaponsList, lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1);
+                new WeaponsWindow(player1, weaponsList, lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1, weaponLabel1);
             }
         }
         else if (e.getActionCommand().equals("Ranking")) { // click to ranking button
@@ -263,10 +300,13 @@ class GameFrame1 extends JFrame implements ActionListener {
                             console.setText(console.getText() + "\n" + player2.getName() + " dodged the attack.");
                         } else {
                             console.setText(console.getText() + "\n" + player2.getName() + " has received " + player2.getDmgReceived() + " of damage.");
+                            // Sum the player 1 injures caused
+                            player1.setInjuresCaused(player1.getInjuresCaused() + player1.getDmgAttack());
+
                             // Recalculate lifebar of player2
                             int lifePercentage = 100 * player2.getLife() / player2.getInitialLife();
                             int calLifeBarWidth = 250 * lifePercentage / 100;
-                            lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+                            lifeBar2.setBounds(340, 30, calLifeBarWidth, 10);
                             lifeBar2.setText(lifePercentage + "%");
                         }
                     }
@@ -292,10 +332,13 @@ class GameFrame1 extends JFrame implements ActionListener {
                             console.setText(console.getText() + "\n" + player1.getName() + " dodged the attack.");
                         } else {
                             console.setText(console.getText() + "\n" + player1.getName() + " has received " + player1.getDmgReceived() + " of damage.");
+                            // Sum player injures sufered
+                            player1.setInjuresSufered(player1.getInjuresSufered() + player2.getDmgAttack());
+
                             // Recalculate lifebar of player1
                             int lifePercentage = 100 * player1.getLife() / player1.getInitialLife();
                             int calLifeBarWidth = 250 * lifePercentage / 100;
-                            lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
+                            lifeBar1.setBounds(0, 30, calLifeBarWidth, 10);
                             lifeBar1.setText(lifePercentage + "%");
                         }
                     }
@@ -318,15 +361,15 @@ class GameFrame1 extends JFrame implements ActionListener {
                 if (player1.getLife() <= 0) {
                     console.setText(console.getText() + "\nThe player lose, " + player2.getName() + " wins.");
                     // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
-                    new Replay(false, player1, player2, warriorsList, weaponsList,
-                            lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2,
-                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2);
+                    new Replay(false, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
+                            powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
+                            defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
                 } else if (player2.getLife() <= 0) {
                     console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
                     // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
-                    new Replay(true, player1, player2, warriorsList, weaponsList,
-                            lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2,
-                            speedBar1, speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2);
+                    new Replay(true, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
+                            powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
+                            defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
                 }
 
             }
@@ -334,20 +377,13 @@ class GameFrame1 extends JFrame implements ActionListener {
         }
         else if (e.getActionCommand().equals("Clear Console")) {
             console.setText("");
-            System.out.println(player2.getName());
         }
     }
 }
 class CharactersWindow extends JDialog {
     private JPanel mainPanel;
-    private Warrior player1;
-    private final ArrayList<Warrior> warriorsList;
-    private JLabel playerImg1;
 
-    CharactersWindow(Warrior player1, ArrayList<Warrior> warriorsList, JLabel playerImg1) {
-        this.player1 = player1;
-        this.warriorsList = warriorsList;
-        this.playerImg1 = playerImg1;
+    CharactersWindow(Warrior player1, ArrayList<Warrior> warriorsList, JLabel playerImg1, JLabel weaponLabel1) {
         setSize(650, 680);
         setTitle("Select Character");
         setLocation(400, 100);
@@ -366,7 +402,7 @@ class CharactersWindow extends JDialog {
 
         for (Warrior warrior : warriorsList) { // we create a button for each of the warriors on the list
             WarriorButon warriorButon;
-            warriorButon = new WarriorButon(warrior, player1, playerImg1, new ImageIcon(warrior.getImgUrl()));
+            warriorButon = new WarriorButon(warrior, player1, playerImg1, new ImageIcon(warrior.getImgUrl()), weaponLabel1);
             mainPanel.add(warriorButon);
             warriorButon.addActionListener(warriorButon); // this will treat the action of the button
         }
@@ -380,13 +416,14 @@ class CharactersWindow extends JDialog {
 }
 class WarriorButon extends JButton implements ActionListener {
     private Warrior warrior, player1;
-    private JLabel playerImg1;
+    private JLabel playerImg1, weaponLabel1;
 
-    WarriorButon(Warrior warrior, Warrior player1, JLabel playerImg1, ImageIcon img) {
+    WarriorButon(Warrior warrior, Warrior player1, JLabel playerImg1, ImageIcon img, JLabel weaponLabel1) {
         super(img);
         this.warrior = warrior;
         this.player1 = player1;
         this.playerImg1 = playerImg1;
+        this.weaponLabel1 = weaponLabel1;
     }
 
     @Override
@@ -410,13 +447,14 @@ class WarriorButon extends JButton implements ActionListener {
         playerImg1.setIcon(img);
         // This prevents a weapon from being chosen for the wrong warrior when changing it back
         player1.setWeaponID(0);
+        weaponLabel1.setIcon(null);
 
     }
 
 }
 class WeaponsWindow extends JDialog {
     private JPanel mainPanel;
-    WeaponsWindow(Warrior player1, ArrayList<Weapon> weaponsList, JLabel lifeBar1, JLabel powerBar1, JLabel agilityBar1, JLabel speedBar1, JLabel defenseBar1) {
+    WeaponsWindow(Warrior player1, ArrayList<Weapon> weaponsList, JLabel lifeBar1, JLabel powerBar1, JLabel agilityBar1, JLabel speedBar1, JLabel defenseBar1, JLabel weaponLabel1) {
         setSize(650, 680);
         setTitle("Select Weapon");
         setLocation(400, 100);
@@ -447,7 +485,7 @@ class WeaponsWindow extends JDialog {
                 // The weaponButton constructor have 1 new ImageIcon because this will be displayed on the button
                 currentWeapon = weaponsList.get(rs.getInt(2) - 1);
                 weaponButton = new WeaponButton(player1, new ImageIcon(currentWeapon.getImage()), currentWeapon,
-                lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1);
+                lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1, weaponLabel1);
                 mainPanel.add(weaponButton);
                 weaponButton.addActionListener(weaponButton); // this will treat the action of the button
             }
@@ -464,9 +502,9 @@ class WeaponsWindow extends JDialog {
 class WeaponButton extends JButton implements ActionListener {
     private Warrior player1;
     private Weapon player1Weapon;
-    private JLabel lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1;
+    private JLabel lifeBar1, powerBar1, agilityBar1, speedBar1, defenseBar1, weaponLabel1;
 
-    WeaponButton(Warrior player1, ImageIcon weaponImg, Weapon player1Weapon, JLabel lifeBar1, JLabel powerBar1, JLabel agilityBar1, JLabel speedBar1, JLabel defenseBar1) {
+    WeaponButton(Warrior player1, ImageIcon weaponImg, Weapon player1Weapon, JLabel lifeBar1, JLabel powerBar1, JLabel agilityBar1, JLabel speedBar1, JLabel defenseBar1, JLabel weaponLabel1) {
         super(weaponImg);
         this.player1 = player1;
         this.player1Weapon = player1Weapon;
@@ -475,6 +513,7 @@ class WeaponButton extends JButton implements ActionListener {
         this.agilityBar1 = agilityBar1;
         this.speedBar1 = speedBar1;
         this.defenseBar1 = defenseBar1;
+        this.weaponLabel1 = weaponLabel1;
     }
 
     @Override
@@ -486,6 +525,9 @@ class WeaponButton extends JButton implements ActionListener {
         player1.setForce(player1.getForce() + player1Weapon.getForce());
         player1.setSpeed(player1.getSpeed() + player1Weapon.getSpeed());
 
+        // Set and resize the weapon image for display
+        weaponLabel1.setIcon(new ImageIcon(new ImageIcon(player1Weapon.getImage()).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+
         // LifeBar calculation
         int lifePercentage = 100 * player1.getLife() / player1.getInitialLife();
         int calLifeBarWidth = 250 * lifePercentage / 100;
@@ -495,12 +537,12 @@ class WeaponButton extends JButton implements ActionListener {
         int calSpeedBarWidth = 250 * player1.getSpeed() / 12; // width calculation for the speedBar
         int calDefenseBarWidth = 250 * player1.getDefense() / 4; // width calculation for the defenseBar
 
-        lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
+        lifeBar1.setBounds(0, 30, calLifeBarWidth, 10);
         lifeBar1.setText("100%");
-        powerBar1.setBounds(50, 50, calPowerBarWidth, 10);
-        agilityBar1.setBounds(50, 70, calAgilityBarWidth, 10);
-        speedBar1.setBounds(50, 90, calSpeedBarWidth, 10);
-        defenseBar1.setBounds(50, 110, calDefenseBarWidth, 10);
+        powerBar1.setBounds(0, 50, calPowerBarWidth, 10);
+        agilityBar1.setBounds(0, 70, calAgilityBarWidth, 10);
+        speedBar1.setBounds(0, 90, calSpeedBarWidth, 10);
+        defenseBar1.setBounds(0, 110, calDefenseBarWidth, 10);
     }
 }
 class Ranking extends JFrame {
@@ -556,12 +598,13 @@ class Replay extends JDialog implements ActionListener {
     private final ArrayList<Weapon> weaponsList;
     private JLabel lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2;
     private JLabel defenseBar1, defenseBar2;
-    private JLabel playerImg1, playerImg2;
+    private JLabel playerImg1, playerImg2, weaponLabel1, weaponLabel2;
+    private String userName;
 
     Replay (Boolean playerWins, Warrior warrior1, Warrior warrior2, ArrayList<Warrior> warriorsList,
             ArrayList<Weapon> weaponsList, JLabel lifeBar1, JLabel lifeBar2, JLabel powerBar1, JLabel powerBar2,
-            JLabel agilityBar1, JLabel agilityBar2, JLabel speedBar1, JLabel speedBar2,
-            JLabel defenseBar1, JLabel defenseBar2, JLabel playerImg1, JLabel playerImg2) {
+            JLabel agilityBar1, JLabel agilityBar2, JLabel speedBar1, JLabel speedBar2, JLabel defenseBar1,
+            JLabel defenseBar2, JLabel playerImg1, JLabel playerImg2, String userName, JLabel weaponLabel1, JLabel weaponLabel2) {
         this.playerWins = playerWins;
         this.warrior1 = warrior1;
         this.warrior2 = warrior2;
@@ -579,6 +622,9 @@ class Replay extends JDialog implements ActionListener {
         this.defenseBar2 = defenseBar2;
         this.playerImg1 = playerImg1;
         this.playerImg2 = playerImg2;
+        this.userName = userName;
+        this.weaponLabel1 = weaponLabel1;
+        this.weaponLabel2 = weaponLabel2;
 
         setSize(300, 200);
         setTitle("Keep Fight");
@@ -616,7 +662,7 @@ class Replay extends JDialog implements ActionListener {
             if (playerWins) { // the player wins
                 // reset the warriors life and sets a random warrior with a random weapon for the bot
                 // Player points are added to the total and are saved
-                warrior1.setTotalPoints(warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID() - 1).getPoints());
+                warrior1.setTotalPoints(warrior1.getTotalPoints() + warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID() - 1).getPoints());
                 warrior1.setLife(warrior1.getInitialLife());
                 warrior2.setLife(warrior2.getInitialLife());
                 Warrior randWarrior;
@@ -655,36 +701,37 @@ class Replay extends JDialog implements ActionListener {
                 warrior2.setForce(warrior2.getForce() + weaponsList.get(warrior2.getWeaponID() - 1).getForce());
                 warrior2.setSpeed(warrior2.getSpeed() + weaponsList.get(warrior2.getWeaponID() - 1).getSpeed());
 
-                // Modify the image displayed on the screen of the character
+                // Modify the image displayed on the screen of the character and the weapon
                 ImageIcon img = new ImageIcon(warrior2.getSpriteUrl());
                 playerImg2.setIcon(img);
+
+                weaponLabel2.setIcon(new ImageIcon(new ImageIcon(weaponsList.get(warrior2.getWeaponID() - 1).getImage()).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 
                 // Calculate again all the statsBars
                 int lifePercentage = 100 * warrior2.getLife() / warrior2.getInitialLife();
                 int calLifeBarWidth = 250 * lifePercentage / 100;
-                lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar2.setBounds(340, 30, calLifeBarWidth, 10);
                 lifeBar2.setText("100%");
 
                 int calPowerBarWidth = 250 * warrior2.getForce() / 11; // width calculation for the powerBar
-                powerBar2.setBounds(390, 50, calPowerBarWidth, 10); // max width 250
+                powerBar2.setBounds(340, 50, calPowerBarWidth, 10); // max width 250
 
                 int calAgilityBarWidth = 250 * warrior2.getAgility() / 7; // width calculation for the agilityBar
-                agilityBar2.setBounds(390, 70, calAgilityBarWidth, 10);
+                agilityBar2.setBounds(340, 70, calAgilityBarWidth, 10);
 
                 int calSpeedBarWidth = 250 * warrior2.getSpeed() / 12; // width calculation for the speedBar
-                speedBar2.setBounds(390, 90, calSpeedBarWidth, 10);
+                speedBar2.setBounds(340, 90, calSpeedBarWidth, 10);
 
                 int calDefenseBarWidth = 250 * warrior2.getDefense() / 4; // width calculation for the defenseBar
-                defenseBar2.setBounds(390, 110, calDefenseBarWidth, 10);
+                defenseBar2.setBounds(340, 110, calDefenseBarWidth, 10);
 
                 // Reset the player lifeBar
                 lifePercentage = 100 * warrior1.getLife() / warrior1.getInitialLife();
                 calLifeBarWidth = 250 * lifePercentage / 100;
-                lifeBar1.setBounds(50, 30, calLifeBarWidth, 10);
+                lifeBar1.setBounds(0, 30, calLifeBarWidth, 10);
                 lifeBar1.setText("100%");
 
             } else { // bot wins
-                // save the points of the player into the bdd
                 // reset the bot warrior life and set the player warrior and weapon to null
                 warrior2.setLife(warrior2.getInitialLife());
                 warrior1.setWeaponID(0);
@@ -692,24 +739,54 @@ class Replay extends JDialog implements ActionListener {
                 // Set an empty name is used to later force the player to choose a new character
                 warrior1.setName("");
 
-                // Set the warrior icon to null
+                // Set the warrior icon and the weapon icon to null
                 ImageIcon img = new ImageIcon("M3-Programacio/Images/playerNotSelected.png");
                 playerImg1.setIcon(img);
+                weaponLabel1.setIcon(null);
 
                 // Reset the bot and player lifebar
                 int lifePercentage = 100 * warrior2.getLife() / warrior2.getInitialLife();
                 int calLifeBarWidth = 250 * lifePercentage / 100;
-                lifeBar2.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar2.setBounds(340, 30, calLifeBarWidth, 10);
                 lifeBar2.setText("100%");
 
                 lifePercentage = 100 * warrior1.getLife() / warrior1.getInitialLife();
                 calLifeBarWidth = 250 * lifePercentage / 100;
-                lifeBar1.setBounds(390, 30, calLifeBarWidth, 10);
+                lifeBar1.setBounds(0, 30, calLifeBarWidth, 10);
                 lifeBar1.setText("100%");
+
+                // Save the battle info in the bdd
+                Query query = new Query();
+                ResultSet rs;
+                rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
+                try {
+                    rs.next();
+                    query.updateplayer(rs.getInt(1), userName, warrior1.getTotalPoints());
+                    query.insertbattle(rs.getInt(1), warrior1.getId(), warrior1.getWeaponID(), warrior2.getId(),
+                            warrior2.getWeaponID(), warrior1.getInjuresCaused(), warrior1.getInjuresSufered(), warrior1.getTotalPoints());
+                    query.closeConnections();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             dispose();
         } else { // player do not want to play again
-            // save the total points of the player into the bdd and the game is over
+            // Set the player total points
+            warrior1.setTotalPoints(warrior1.getTotalPoints() + warrior2.getPoints() + weaponsList.get(warrior2.getWeaponID() - 1).getPoints());
+
+            // Save the total points of the player into the bdd and the game is over
+            Query query = new Query();
+            ResultSet rs;
+            rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
+            try {
+                rs.next();
+                query.updateplayer(rs.getInt(1), userName, warrior1.getTotalPoints());
+                query.insertbattle(rs.getInt(1), warrior1.getId(), warrior1.getWeaponID(), warrior2.getId(),
+                        warrior2.getWeaponID(), warrior1.getInjuresCaused(), warrior1.getInjuresSufered(), warrior1.getTotalPoints());
+                query.closeConnections();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             System.exit(0);
         }
     }
