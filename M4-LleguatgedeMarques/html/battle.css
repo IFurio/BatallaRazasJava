@@ -3,7 +3,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url("../../M3-Programacio/Images/back.png");
+    background-image: url("../Images/back.png");
     width: 100%;
     height: 100%;
     margin: 0;

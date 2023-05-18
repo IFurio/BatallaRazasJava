@@ -17,11 +17,11 @@
                         <div class="portaits">
                             <xsl:element name="img">
                                 <xsl:attribute name="class">photo</xsl:attribute>
-                                <xsl:attribute name="src">../../M3-Programacio/Images/warrior<xsl:value-of select="warrior_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../Images/warrior<xsl:value-of select="warrior_id"/>1.png</xsl:attribute>
                             </xsl:element>
                             <xsl:element name="img">
                                 <xsl:attribute name="class">photo</xsl:attribute>
-                                <xsl:attribute name="src">../../M3-Programacio/Images/warrior<xsl:value-of select="opponent_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../Images/warrior<xsl:value-of select="opponent_id"/>1.png</xsl:attribute>
                             </xsl:element>
                         </div>
                         <table>
@@ -64,11 +64,11 @@
                           <div class="portaits">
                             <xsl:element name="img">
                                 <xsl:attribute name="class">weapon</xsl:attribute>
-                                <xsl:attribute name="src">../../M3-Programacio/Images/weapon<xsl:value-of select="warrior_weapon_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../Images/weapon<xsl:value-of select="warrior_weapon_id"/>1.png</xsl:attribute>
                             </xsl:element>
                             <xsl:element name="img">
                                 <xsl:attribute name="class">weapon</xsl:attribute>
-                                <xsl:attribute name="src">../../M3-Programacio/Images/weapon<xsl:value-of select="opponent_weapon_id"/>1.png</xsl:attribute>
+                                <xsl:attribute name="src">../Images/weapon<xsl:value-of select="opponent_weapon_id"/>1.png</xsl:attribute>
                             </xsl:element>
                           </div>
                     </div>
