@@ -20,7 +20,7 @@ class GameFrame1 extends JFrame implements ActionListener {
     private JLabel imgLabel, imgLabel2, lifeBar1, lifeBar2, powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1,
             speedBar2, defenseBar1, defenseBar2, playerImg1, playerImg2, weaponLabel1, weaponLabel2;
     private Warrior player1, player2;
-    private JButton button1, button2, button3, button4, button5;
+    private JButton button1, button2, button3, button4, button5, button6;
     private JScrollPane scrollPane;
     private JTextArea console;
     private final ArrayList<Warrior> warriorsList;
@@ -46,6 +46,7 @@ class GameFrame1 extends JFrame implements ActionListener {
         button3 = new JButton("Ranking");
         button4 = new JButton("Fight");
         button5 = new JButton("Clear Console");
+        button6 = new JButton("Skip Combat");
 
         console = new JTextArea("Welcome to the game!",5, 70);
         console.setEditable(false);
@@ -154,6 +155,7 @@ class GameFrame1 extends JFrame implements ActionListener {
         button3.setBackground(Color.YELLOW);
         button4.setBackground(Color.YELLOW);
         button5.setBackground(Color.YELLOW);
+        button6.setBackground(Color.YELLOW);
 
         mainPanel.setLayout(new BorderLayout(50, 30));
 
@@ -196,6 +198,8 @@ class GameFrame1 extends JFrame implements ActionListener {
         rightPanel.add(button4);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         rightPanel.add(button5);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        rightPanel.add(button6);
 
         centerPanel.add(lifeBar1, BorderLayout.NORTH);
         centerPanel.add(lifeBar2, BorderLayout.NORTH);
@@ -225,6 +229,7 @@ class GameFrame1 extends JFrame implements ActionListener {
         button3.addActionListener(this);
         button4.addActionListener(this);
         button5.addActionListener(this);
+        button6.addActionListener(this);
 
         setVisible(true);
     }
@@ -254,7 +259,7 @@ class GameFrame1 extends JFrame implements ActionListener {
                 rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
                 try {
                     rs.next();
-                    query.updateplayer(rs.getInt(1), userName, player1.getTotalPoints());
+                    query.updateplayer(rs.getInt(1), userName, rs.getInt(2) + player1.getTotalPoints());
                     query.insertbattle(rs.getInt(1), player1.getId(), player1.getWeaponID(), player2.getId(),
                             player2.getWeaponID(), player1.getInjuresCaused(), player1.getInjuresSufered(), player1.getTotalPoints());
                     query.closeConnections();
@@ -277,106 +282,51 @@ class GameFrame1 extends JFrame implements ActionListener {
         else if (e.getActionCommand().equals("Fight")) { // click fight button
             button4.setEnabled(false);      //Set Enable to false so the player cant click it until the turn ends
             if (player1.getLife() > 0 && player2.getLife() > 0 && player1.getWeaponID() != 0 && player2.getWeaponID() != 0) {
-                if (player1.getDealer() == 0 && player2.getDealer() == 0) { //If it get clicked for the first time
-                    if (player1.getSpeed() >= player2.getSpeed()) {          //Set the attack order
-                        player1.setDealer(1);                                //The player will attack first
-                    } else {
-                        player2.setDealer(2);                                //The BOT attack first
-                    }
-                }
-                //Reset Stats
-                player1.setDmgAttack(0);
-                player2.setDmgAttack(0);
-                player1.setDmgReceived(0);
-                player2.setDmgReceived(0);
-                if (player1.getDealer() == 1) {                     //If its Player1 turn
-                    console.setText(console.getText() + "\n" + player1.getName()+"s turn");
-                    player1.setDmgAttack(player1.doAtack());
-                    if (player1.getDmgAttack() == 0) {              //Attack failed
-                        console.setText(console.getText() + "\nAttack failed.");
-                    } else {                                        //Attack not failed
-                        player2.doDefense(player1.getDmgAttack());
-                        if (player2.getDmgReceived() == 0) {        //If it dodge the attack (if DmgReceived isnt 0 it didnt dodge it)
-                            console.setText(console.getText() + "\n" + player2.getName() + " dodged the attack.");
-                        } else {
-                            console.setText(console.getText() + "\n" + player2.getName() + " has received " + player2.getDmgReceived() + " of damage.");
-                            // Sum the player 1 injures caused
-                            player1.setInjuresCaused(player1.getInjuresCaused() + player1.getDmgAttack());
+                Combat combat = new Combat(player1, player2, console, lifeBar1, lifeBar2);
+                String playerWins = combat.start(); // start the combat
 
-                            // Recalculate lifebar of player2
-                            int lifePercentage = 100 * player2.getLife() / player2.getInitialLife();
-                            int calLifeBarWidth = 250 * lifePercentage / 100;
-                            lifeBar2.setBounds(340, 30, calLifeBarWidth, 10);
-                            lifeBar2.setText(lifePercentage + "%");
-                        }
-                    }
-                    if (player1.getSpeed() <= player2.getSpeed()) {          //If dealer speed is equal or less than the opponent, it cant attack again
-                        player1.setDealer(0);
-                        player2.setDealer(2);
-                    } else {                                                //If it has more speed
-                        Random r = new Random();
-                        int ran = r.nextInt(100) + 1;
-                        if ((player1.getSpeed() - player2.getSpeed()) * 10 < ran) {     //It can attack again
-                            player1.setDealer(0);
-                            player2.setDealer(2);
-                        }
-                    }
-                } else if (player2.getDealer() == 2) {               //If its Player2 turn
-                    console.setText(console.getText() + "\n" + player2.getName()+"s turn");
-                    player2.setDmgAttack(player2.doAtack());
-                    if (player2.getDmgAttack() == 0) {               //Attack failed
-                        console.setText(console.getText() + "\nAttack failed.");
-                    } else {                                        //Attack not failed
-                        player1.doDefense(player2.getDmgAttack());
-                        if (player1.getDmgReceived() == 0) {        //If it dodge the attack (if DmgReceived isnt 0 it didnt dodge it)
-                            console.setText(console.getText() + "\n" + player1.getName() + " dodged the attack.");
-                        } else {
-                            console.setText(console.getText() + "\n" + player1.getName() + " has received " + player1.getDmgReceived() + " of damage.");
-                            // Sum player injures sufered
-                            player1.setInjuresSufered(player1.getInjuresSufered() + player2.getDmgAttack());
-
-                            // Recalculate lifebar of player1
-                            int lifePercentage = 100 * player1.getLife() / player1.getInitialLife();
-                            int calLifeBarWidth = 250 * lifePercentage / 100;
-                            lifeBar1.setBounds(0, 30, calLifeBarWidth, 10);
-                            lifeBar1.setText(lifePercentage + "%");
-                        }
-                    }
-                    if (player2.getSpeed() <= player1.getSpeed()) {          //If dealer speed is equal or less than the opponent, it cant attack again
-                        player2.setDealer(0);
-                        player1.setDealer(1);
-                    } else {                                                 //If it has more speed
-                        Random r = new Random();
-                        int ran = r.nextInt(100) + 1;
-                        if ((player2.getSpeed() - player1.getSpeed()) * 10 < ran) {     //It can attack again
-                            player2.setDealer(0);
-                            player1.setDealer(1);
-                        }
-                    }
-                }
-                console.setText(console.getText() + "\n" + player1.getName() + "s HP: " + player1.getLife());
-                console.setText(console.getText() + "\n" + player2.getName() + "s HP: " + player2.getLife());
-
-                //When there is someone with no HP
-                if (player1.getLife() <= 0) {
-                    console.setText(console.getText() + "\nThe player lose, " + player2.getName() + " wins.");
-                    // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
-                    new Replay(false, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
-                            powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
-                            defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
-                } else if (player2.getLife() <= 0) {
-                    console.setText(console.getText() + "\nBot lose, player with " + player1.getName() + " wins");
+                if (playerWins.equals("yes")) {
                     // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
                     new Replay(true, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
                             powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
                             defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
                 }
-
+                else if(playerWins.equals("no")) {
+                    // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
+                    new Replay(false, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
+                            powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
+                            defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
+                }
             }
             button4.setEnabled(true);
         }
         else if (e.getActionCommand().equals("Clear Console")) {
             console.setText("");
+        }
+        else if (e.getActionCommand().equals("Skip Combat")) {
+            button6.setEnabled(false);
+            if (player1.getLife() > 0 && player2.getLife() > 0 && player1.getWeaponID() != 0 && player2.getWeaponID() != 0) {
+                while (true) {
+                    Combat combat = new Combat(player1, player2, console, lifeBar1, lifeBar2);
+                    String playerWins = combat.start();
+
+                    if (playerWins.equals("yes")) {
+                        // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
+                        new Replay(true, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
+                                powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
+                                defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
+                        break;
+                    }
+                    else if(playerWins.equals("no")) {
+                        // Replay is used to ask the user is he wants to play again and to reset the stats and the warriors
+                        new Replay(false, player1, player2, warriorsList, weaponsList, lifeBar1, lifeBar2,
+                                powerBar1, powerBar2, agilityBar1, agilityBar2, speedBar1, speedBar2, defenseBar1,
+                                defenseBar2, playerImg1, playerImg2, userName, weaponLabel1, weaponLabel2);
+                        break;
+                    }
+                }
+            }
+            button6.setEnabled(true);
         }
     }
 }
@@ -761,7 +711,7 @@ class Replay extends JDialog implements ActionListener {
                 rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
                 try {
                     rs.next();
-                    query.updateplayer(rs.getInt(1), userName, warrior1.getTotalPoints());
+                    query.updateplayer(rs.getInt(1), userName, rs.getInt(2) + warrior1.getTotalPoints());
                     query.insertbattle(rs.getInt(1), warrior1.getId(), warrior1.getWeaponID(), warrior2.getId(),
                             warrior2.getWeaponID(), warrior1.getInjuresCaused(), warrior1.getInjuresSufered(), warrior1.getTotalPoints());
                     query.closeConnections();
@@ -780,7 +730,7 @@ class Replay extends JDialog implements ActionListener {
             rs = query.makeSelect("SELECT player_id, global_points FROM players ORDER BY player_id DESC LIMIT 1");
             try {
                 rs.next();
-                query.updateplayer(rs.getInt(1), userName, warrior1.getTotalPoints());
+                query.updateplayer(rs.getInt(1), userName, rs.getInt(2) + warrior1.getTotalPoints());
                 query.insertbattle(rs.getInt(1), warrior1.getId(), warrior1.getWeaponID(), warrior2.getId(),
                         warrior2.getWeaponID(), warrior1.getInjuresCaused(), warrior1.getInjuresSufered(), warrior1.getTotalPoints());
                 query.closeConnections();
